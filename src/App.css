@@ -8,16 +8,25 @@ body {
   font-family: sans-serif;
 }
 
-/* LAYOUT */
+:root {
+  --dark-bg-color: #161C23;
+  --light-bg-color: #0D1116;
+  --primary-btn-color: #81F495;
+  --male-color: #89CFF0;
+  --female-color: #FF9CCD;
+}
 
 .container {
-  margin: 0 auto;
   padding: 16px;
   width: 100%;
-  max-width: 1280px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .row {
+  max-width: 1280px;
   margin: 0 -16px;
   display: flex;
 }
@@ -26,4 +35,20 @@ body {
   position: relative;
   width: 100%;
   padding: 16px 0;
+}
+
+.jcc {
+  justify-content: center;
+}
+
+.aic {
+  align-items: center;
+}
+
+.bg-dark {
+  background-color: var(--dark-bg-color);
+}
+
+.bg-light {
+  background-color: var(--light-bg-color);
 }
