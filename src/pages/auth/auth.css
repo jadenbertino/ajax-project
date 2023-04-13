@@ -1,17 +1,17 @@
 .auth {
   background-color: var(--light-bg-color);
   width: 500px;
-  padding: 40px 20px 60px;
+  padding: 40px 32px 60px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   color: #fff;
+  text-align: center;
 }
 
 .auth .header {
-  text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .auth input {
@@ -19,5 +19,18 @@
   border-radius: 4px;
   outline: none;
   padding: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.auth input:hover {
+  outline: var(--male-color) 1px auto;
+}
+
+.auth .btn {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.auth .redirect {
+  color: var(--primary-btn-color);
 }
