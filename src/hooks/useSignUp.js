@@ -49,5 +49,5 @@ export function useSignUp() {
     return () => setIsMounted(false)
   }, [])
   
-  return { error, pending, signUp }
+  return { error, pending, signup }
 }

@@ -21,7 +21,7 @@ export default function SignIn() {
   }, [user, nav]);
 
   function handleSubmit(e) {
-    e.target.preventDefault()
+    e.preventDefault()
     signin(email, password)
   }
 
@@ -44,7 +44,7 @@ export default function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
             />
             {error && <div className='error'>{error}</div>}
-            <button className="btn">Sign In</button>
+            <button className="btn">sign in</button>
             <span>
               don't have an account yet?&nbsp;
               <Link className="redirect" to="/signup">sign up here</Link>

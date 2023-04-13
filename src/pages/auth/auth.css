@@ -34,3 +34,7 @@
 .auth .redirect {
   color: var(--primary-btn-color);
 }
+
+.auth .error {
+  margin-bottom: 20px;
+}

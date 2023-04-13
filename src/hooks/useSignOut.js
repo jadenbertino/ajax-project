@@ -39,5 +39,5 @@ export function useSignOut() {
     return () => setMounted(false)
   }, [])
 
-  return { signOut, error, pending }
+  return { signout, error, pending }
 }
