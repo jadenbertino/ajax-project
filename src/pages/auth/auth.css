@@ -1,0 +1,23 @@
+.auth {
+  background-color: var(--light-bg-color);
+  width: 500px;
+  padding: 40px 20px 60px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+}
+
+.auth .header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.auth input {
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  padding: 8px;
+  margin-bottom: 16px;
+}
