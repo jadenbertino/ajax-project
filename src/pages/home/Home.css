@@ -8,6 +8,11 @@
   right: 20px;
 }
 
+.home .btn.signout {
+  background-color: var(--light-bg-color);
+  color: #fff;
+}
+
 .home .conversations {
   margin: 40px 0;
   display: flex;

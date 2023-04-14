@@ -3,18 +3,34 @@ import avatar from './avatar.jpg'
 // styles
 import { useState } from 'react'
 import './Create.css'
+import { Link } from 'react-router-dom'
 
 export default function Create() {
   const [name, setName] = useState('')
   const [imgSrc, setImgSrc] = useState('')
   const [previewImgSrc, setPreviewImgSrc] = useState(avatar)
 
-  function handleProfileSrcChange(e) {
+  function loadImg(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
 
+  async function handleImgSrcChange(src) {
+    setImgSrc(src);
+    try {
+      const img = await loadImg(src); // throws error if invalid url
+      setPreviewImgSrc(img.src); // valid img url => change to it
+    } catch {
+      setPreviewImgSrc(avatar); // invalid img url => default to placeholder value
+    }
   }
 
   return (
-    <div className="full-page-centered">
+    <div className="fullscreen dfa">
       <form className="create">
         <h1 className='header'>Create New Conversation</h1>
         <div className="row">
@@ -25,6 +41,7 @@ export default function Create() {
             <label>
               <span>Name</span>
               <input
+                required
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
@@ -33,20 +50,17 @@ export default function Create() {
             <label>
               <span>Profile Image URL</span>
               <input
+                className='img-src'
                 type="text"
+                placeholder='optional'
                 value={imgSrc}
-                onChange={e => handleProfileSrcChange(e.target.value)}
-              />
-            </label>
-            <p>~ Or ~</p>
-            <label>
-              <span>Upload Profile Photo</span>
-              <input
-                type="text"
+                onChange={e => handleImgSrcChange(e.target.value)}
               />
             </label>
             <div className="btns">
-              <button className="btn cancel">Cancel</button>
+              <Link to="/">
+                <button className="btn cancel">Cancel</button>
+              </Link>
               <button className="btn">Save</button>
             </div>
           </div>

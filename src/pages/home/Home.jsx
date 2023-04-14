@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { useAuthContext } from "../../hooks/useAuthContext"
 import { useSignOut } from '../../hooks/useSignOut'
+import { Link } from "react-router-dom"
 
 import './Home.css'
-import { Link } from "react-router-dom"
 
 export default function Home() {
   const { user } = useAuthContext()
@@ -21,9 +21,9 @@ export default function Home() {
 
   return (
     <div className='home'>
-      <div className="full-page-centered">
+      <div className="fullscreen dfa">
         <nav>
-          <button className="btn" onClick={signout}>sign out</button>
+          <button className="btn signout" onClick={signout}>sign out</button>
         </nav>
         <div className="container">
           <h1>Select A Conversation:</h1>

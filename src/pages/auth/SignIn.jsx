@@ -26,7 +26,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="full-page-centered">
+    <div className="fullscreen dfa">
       <form className="auth" onSubmit={handleSubmit}>
         <h2 className="header">welcome back &nbsp;:&nbsp;&#41;</h2>
         <label>

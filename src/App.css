@@ -75,9 +75,12 @@ button {
   padding: 12px;
 }
 
-.full-page-centered {
+.fullscreen {
   width: 100vw;
   height: 100vh;
+}
+
+.dfa {
   display: flex;
   align-items: center;
   justify-content: center;
