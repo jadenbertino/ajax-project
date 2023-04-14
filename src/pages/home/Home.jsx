@@ -4,6 +4,7 @@ import { useAuthContext } from "../../hooks/useAuthContext"
 import { useSignOut } from '../../hooks/useSignOut'
 
 import './Home.css'
+import { Link } from "react-router-dom"
 
 export default function Home() {
   const { user } = useAuthContext()
@@ -20,7 +21,7 @@ export default function Home() {
 
   return (
     <div className='home'>
-      <div className="df vh-100 jcc aic">
+      <div className="full-page-centered">
         <nav>
           <button className="btn" onClick={signout}>sign out</button>
         </nav>
@@ -33,10 +34,10 @@ export default function Home() {
                 {/* insert fetched conversations here */}
               </div>
               )): null}
-            <div className="conversation">
+            <Link className="conversation" to="/create">
               <i className="fa-solid fa-plus"></i>
               <p>New Conversation</p>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

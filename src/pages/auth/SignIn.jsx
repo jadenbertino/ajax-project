@@ -26,7 +26,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="df jcc aic vh-100">
+    <div className="full-page-centered">
       <form className="auth" onSubmit={handleSubmit}>
         <h2 className="header">welcome back &nbsp;:&nbsp;&#41;</h2>
         <label>

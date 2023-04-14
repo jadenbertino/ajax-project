@@ -1,0 +1,46 @@
+.create {
+  width: 800px;
+  background-color: var(--light-bg-color);
+  padding: 40px;
+}
+
+.create .header {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.create .preview-img {
+  max-width: 75%;
+}
+
+.create .right-col > *:not(:last-child) {
+  margin-bottom: 24px;
+}
+
+.create .left-col,
+.create .right-col {
+  width: 50%;
+}
+
+.create .left-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create .btns {
+  margin-top: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.create .btns .btn {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.create .cancel {
+  background-color: var(--red-color);
+}

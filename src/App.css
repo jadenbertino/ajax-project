@@ -16,6 +16,7 @@ input, select, textarea, button {
 
 a, a:visited {
   text-decoration: none;
+  color: inherit;
 }
 
 button {
@@ -26,8 +27,9 @@ button {
   --dark-bg-color: #0D1116;
   --light-bg-color: #161C23;
   --primary-btn-color: #81F495;
-  --male-color: #89CFF0;
-  --female-color: #FF9CCD;
+  --red-color: #FF6666;
+  --blue-color: #89CFF0;
+  --pink-color: #FF9CCD;
 }
 
 .container {
@@ -45,7 +47,7 @@ button {
 .col {
   position: relative;
   width: 100%;
-  padding: 16px 0;
+  padding: 0 16px;
 }
 
 .df {
@@ -71,4 +73,34 @@ button {
   border: none;
   border-radius: 4px;
   padding: 12px;
+}
+
+.full-page-centered {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Forms */
+
+form label {
+  display: flex;
+  flex-direction: column;
+}
+
+form label span {
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+form input {
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+form input:focus {
+  outline: var(--blue-color) 1px auto;
 }
