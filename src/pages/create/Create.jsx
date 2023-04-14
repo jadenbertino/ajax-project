@@ -1,15 +1,21 @@
-import avatar from './avatar.jpg'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../../hooks/useAuthContext'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '../../firebase/init'
 
 // styles
-import { useState } from 'react'
 import './Create.css'
-import { Link } from 'react-router-dom'
+import avatar from './avatar.jpg'
 
 export default function Create() {
   const [name, setName] = useState('')
   const [imgSrc, setImgSrc] = useState('')
   const [previewImgSrc, setPreviewImgSrc] = useState(avatar)
-
+  const [error, setError] = useState('')
+  const { user } = useAuthContext()
+  const nav = useNavigate()
+  
   function loadImg(src) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -18,7 +24,7 @@ export default function Create() {
       img.src = src;
     });
   }
-
+  
   async function handleImgSrcChange(src) {
     setImgSrc(src);
     try {
@@ -29,9 +35,35 @@ export default function Create() {
     }
   }
 
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError(null)
+    
+    try {
+      // validation: imgSrc must 1) point to valid img or 2) be empty
+      if (imgSrc !== previewImgSrc && imgSrc !== '') {
+        throw new Error('Please enter a valid img url or leave empty')
+      }
+
+      const newConversation = {
+        name,
+        profilePhoto: imgSrc,
+        conversationContent: [],
+        createdBy: user.uid,
+        createdAt: serverTimestamp()
+      }
+
+      const ref = collection(db, "conversations")
+      await addDoc(ref, newConversation)
+      nav('/')
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+  
   return (
     <div className="fullscreen dfa">
-      <form className="create">
+      <form className="create" onSubmit={handleSubmit}>
         <h1 className='header'>Create New Conversation</h1>
         <div className="row">
           <div className="col left-col">
@@ -57,6 +89,7 @@ export default function Create() {
                 onChange={e => handleImgSrcChange(e.target.value)}
               />
             </label>
+            {error && <p className='error'>{error}</p>}
             <div className="btns">
               <Link to="/">
                 <button className="btn cancel">Cancel</button>
