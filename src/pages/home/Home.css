@@ -1,5 +1,31 @@
+.home {
+  text-align: center;
+}
+
 .home nav {
   position: absolute;
   top: 20px;
   right: 20px;
+}
+
+.home .conversations {
+  margin: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.home .conversation {
+  width: 200px;
+  height: 200px;
+  background-color: var(--light-bg-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.home .fa-plus {
+  font-size: 60px;
+  margin-bottom: 20px;
 }
