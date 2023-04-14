@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { auth } from "../firebase/init";
+import { auth, db } from "../firebase/init";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useAuthContext } from "./useAuthContext";
+import { doc, setDoc } from "firebase/firestore";
 
 export function useSignUp() {
   const [error, setError] = useState(null)
@@ -26,6 +27,17 @@ export function useSignUp() {
       await updateProfile(response.user, {displayName})
 
       const user = response.user
+
+      // create user document
+      const docRef = doc(db, "users", user.uid)
+      const userDoc = {
+        conversations: [],
+        apiKey: '',
+        tokensUsed: 0,
+        gender: '',
+        email: user.email
+      }
+      await setDoc(docRef, userDoc)
 
       // update context
       setAuthContext(prev => ({...prev, user }))

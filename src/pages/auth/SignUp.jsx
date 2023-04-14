@@ -21,9 +21,9 @@ export default function SignIn() {
     }
   }, [user, nav]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    signup(username, email, password);
+    await signup(username, email, password);
   }
 
   return (

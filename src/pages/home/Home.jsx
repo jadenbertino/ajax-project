@@ -19,6 +19,8 @@ export default function Home() {
     }
   }, [user, nav])
 
+  // fetch user conversations
+
   return (
     <div className='home'>
       <div className="fullscreen dfa">

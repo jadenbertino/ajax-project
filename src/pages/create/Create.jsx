@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../hooks/useAuthContext'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, Timestamp, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '../../firebase/init'
 
 // styles
@@ -49,12 +49,16 @@ export default function Create() {
         name,
         profilePhoto: imgSrc,
         conversationContent: [],
-        createdBy: user.uid,
-        createdAt: serverTimestamp()
+        createdAt: Timestamp.now()
       }
-
-      const ref = collection(db, "conversations")
-      await addDoc(ref, newConversation)
+      
+      // push newConversation to user doc 
+      const userDocRef = doc(db, "users", user.uid)
+      const userDocSnap = await getDoc(userDocRef)
+      if (!userDocSnap.exists()) throw new Error("Document doesn't exist")
+      const { conversations } = userDocSnap.data()
+      conversations.push(newConversation)
+      await setDoc(userDocRef, { conversations }, { merge: true })
       nav('/')
     } catch (err) {
       setError(err.message)

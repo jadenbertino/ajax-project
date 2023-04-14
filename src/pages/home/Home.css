@@ -11,6 +11,7 @@
 .home .btn.signout {
   background-color: var(--light-bg-color);
   color: #fff;
+  font-weight: normal;
 }
 
 .home .conversations {
@@ -28,6 +29,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  border-radius: 8px;
 }
 
 .home .fa-plus {
