@@ -10,8 +10,18 @@
   text-align: center;
 }
 
-.auth *:not(:last-child) {
-  margin-bottom: 20px;
+.auth > *:not(:last-child) {
+  margin-bottom: 24px;
+}
+
+.auth label {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth label span {
+  margin-bottom: 8px;
+  text-align: left;
 }
 
 .auth input {
