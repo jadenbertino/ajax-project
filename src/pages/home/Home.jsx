@@ -3,6 +3,8 @@ import { useNavigate } from "react-router"
 import { useAuthContext } from "../../hooks/useAuthContext"
 import { useSignOut } from '../../hooks/useSignOut'
 
+import './Home.css'
+
 export default function Home() {
   const { user } = useAuthContext()
   const nav = useNavigate()
@@ -17,7 +19,11 @@ export default function Home() {
 
   return (
     <div className='home'>
-      <button className="btn" onClick={signout}>sign out</button>
+      <div className="container vh-100 jc aic">
+        <nav>
+          <button className="btn" onClick={signout}>sign out</button>
+        </nav>
+      </div>
     </div>
   )
 }
