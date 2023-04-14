@@ -30,15 +30,13 @@ button {
 }
 
 .container {
+  margin: 0 auto;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: calc(1280px + 40px);
   padding: 20px;
 }
 
 .row {
-  max-width: 1280px;
   margin: 0 -16px;
   display: flex;
 }
@@ -47,6 +45,10 @@ button {
   position: relative;
   width: 100%;
   padding: 16px 0;
+}
+
+.df {
+  display: flex;
 }
 
 .jcc {

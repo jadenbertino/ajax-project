@@ -27,22 +27,25 @@ export default function SignIn() {
   }
 
   return (
-    <div className="container jcc aic vh-100">
+    <div className="df jcc aic vh-100">
       <form className="auth" onSubmit={handleSubmit}>
         <h2 className="header">claim your rizz robot 👇</h2>
         <input
+          required
           type="text"
           value={username}
           placeholder="username"
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
+          required
           type="email"
           value={email}
           placeholder="email"
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
+          required
           type="password"
           placeholder="password"
           value={password}
