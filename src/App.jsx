@@ -6,6 +6,7 @@ import Home from './pages/home/Home';
 import SignIn from './pages/auth/SignIn';
 import SignUp from './pages/auth/SignUp';
 import Create from './pages/create/Create';
+import Conversation from './pages/conversation/Conversation'
 
 // styles
 import './App.css';
@@ -22,6 +23,7 @@ function App() {
             <Route path="/create" element={<Create />}/>
             <Route path="/signin" element={<SignIn />}/>
             <Route path="/signup" element={<SignUp />}/>
+            <Route path="/conversations/:conversationID" element={<Conversation />}/>
           </Routes>
         </Router>
       )}

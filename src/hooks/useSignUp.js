@@ -35,7 +35,6 @@ export function useSignUp() {
         apiKey: '',
         tokensUsed: 0,
         gender: '',
-        email: user.email
       }
       await setDoc(docRef, userDoc)
 

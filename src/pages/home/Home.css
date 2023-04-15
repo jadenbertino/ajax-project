@@ -1,11 +1,23 @@
 .home {
   text-align: center;
+  height: 100vh;
+  padding: 32px;
+  overflow-y: scroll;
 }
 
 .home nav {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  height: 40px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.home main {
+  height: 100%;
+  transform: translateY(-60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .home .btn.signout {
@@ -15,12 +27,15 @@
 }
 
 .home .conversations {
-  margin: 40px 0;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  max-height: 60vh;
+  overflow-y: scroll;
 }
 
 .home .conversation {
+  margin: 32px 16px 0;
   width: 200px;
   height: 200px;
   background-color: var(--light-bg-color);
@@ -28,8 +43,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 12px;
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.home .conversation .name {
+  max-height: 40px;
+  overflow-y: hidden;
+}
+
+.home .conversation img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 12px;
 }
 
 .home .fa-plus {

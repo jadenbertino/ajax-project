@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../hooks/useAuthContext'
 import { doc, Timestamp, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '../../firebase/init'
+import { v4 as uuidv4 } from 'uuid'
 
 // styles
 import './Create.css'
@@ -46,6 +47,7 @@ export default function Create() {
       }
 
       const newConversation = {
+        id: uuidv4(),
         name,
         profilePhoto: imgSrc,
         conversationContent: [],
