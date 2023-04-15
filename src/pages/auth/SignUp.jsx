@@ -27,7 +27,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="df jcc aic vh-100">
+    <div className="fullscreen dfa">
       <form className="auth" onSubmit={handleSubmit}>
         <h2 className="header">claim your rizz robot 👇</h2>
         <label>

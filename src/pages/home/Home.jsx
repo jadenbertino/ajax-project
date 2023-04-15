@@ -24,33 +24,35 @@ export default function Home() {
   }, [user, nav]);
 
   return (
-    <div className="home container">
-      <nav>
-        <button className="btn signout" onClick={signout}>
-          sign out
-        </button>
-      </nav>
-      <main>
-        <h1>Select A Conversation:</h1>
-        <div className="conversations">
-          {conversations
-            ? conversations.map(({ id, name, profilePhoto }) => (
-                <Link
-                  className="conversation"
-                  key={id}
-                  to={`/conversations/${id}`}
-                >
-                  <img src={profilePhoto || avatar} alt="" />
-                  <p className="name">{name}</p>
-                </Link>
-              ))
-            : null}
-          <Link className="conversation" to="/create">
-            <i className="fa-solid fa-plus"></i>
-            <p>New Conversation</p>
-          </Link>
-        </div>
-      </main>
-    </div>
+    <section className="home">
+      <div className="container">
+        <nav>
+          <button className="btn signout" onClick={signout}>
+            sign out
+          </button>
+        </nav>
+        <main>
+          <h1>Select A Conversation:</h1>
+          <div className="conversations">
+            {conversations
+              ? conversations.map(({ id, name, profilePhoto }) => (
+                  <Link
+                    className="conversation"
+                    key={id}
+                    to={`/conversations/${id}`}
+                  >
+                    <img src={profilePhoto || avatar} alt="" />
+                    <p className="name">{name}</p>
+                  </Link>
+                ))
+              : null}
+            <Link className="conversation" to="/create">
+              <i className="fa-solid fa-plus"></i>
+              <p>New Conversation</p>
+            </Link>
+          </div>
+        </main>
+      </div>
+    </section>
   );
 }

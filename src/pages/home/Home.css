@@ -1,8 +1,10 @@
-.home {
+.home > .container {
   text-align: center;
-  height: 100vh;
-  padding: 32px;
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 32px;
+  padding-bottom: 32px;
 }
 
 .home nav {
@@ -13,11 +15,10 @@
 }
 
 .home main {
-  height: 100%;
-  transform: translateY(-60px);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex-grow: 1;
 }
 
 .home .btn.signout {
@@ -30,8 +31,6 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  max-height: 60vh;
-  overflow-y: scroll;
 }
 
 .home .conversation {
