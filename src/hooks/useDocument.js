@@ -8,6 +8,7 @@ export function useDocument(collectionName, id) {
 
   // realtime data for doc
   useEffect(() => {
+    if (!id) return
     const ref = doc(db, collectionName, id)
     const unsub = onSnapshot(ref, (doc) => {
       if (doc.data()) {

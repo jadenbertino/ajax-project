@@ -13,7 +13,7 @@ export default function Home() {
   const { user } = useAuthContext();
   const nav = useNavigate();
   const { signout } = useSignOut();
-  const { document: userDoc } = useDocument("users", user.uid);
+  const { document: userDoc } = useDocument("users", user && user.uid);
   const { conversations } = userDoc ?? {};
 
   // redirect user to sign in page if not signed in
