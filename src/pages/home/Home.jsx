@@ -1,9 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+
+// auth
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useDocument } from "../../hooks/useDocument";
 import { useSignOut } from "../../hooks/useSignOut";
+
+// firestore
+import { useSubcollection } from "../../hooks/useSubcollection";
+import { doc } from "firebase/firestore";
+import { db } from "../../firebase/init";
 
 // styles
 import "./Home.css";
@@ -13,14 +19,18 @@ export default function Home() {
   const { user } = useAuthContext();
   const nav = useNavigate();
   const { signout } = useSignOut();
-  const { document: userDoc } = useDocument("users", user && user.uid);
-  const { conversations } = userDoc ?? {};
-
-  // redirect user to sign in page if not signed in
+  const [userDocRef, setUserDocRef] = useState(null)
+  const { docs: conversations } = useSubcollection(userDocRef, 'conversations')
+  
   useEffect(() => {
+    // redirect user to sign in page if not signed in
     if (!user) {
-      nav("/signin");
+      nav("/signin")
+      return
     }
+
+    const userDocRef = doc(db, 'users', user.uid)
+    setUserDocRef(userDocRef)
   }, [user, nav]);
 
   return (
