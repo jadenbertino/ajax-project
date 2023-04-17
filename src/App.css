@@ -5,16 +5,20 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--dark-bg-color);
   color: #fff;
 }
 
-input, select, textarea, button {
+input,
+select,
+textarea,
+button {
   font-family: inherit;
 }
 
-a, a:visited {
+a,
+a:visited {
   text-decoration: none;
   color: inherit;
 }
@@ -24,16 +28,16 @@ button {
 }
 
 :root {
-  --dark-bg-color: #0D1116;
-  --light-bg-color: #161C23;
-  --primary-btn-color: #81F495;
-  --red-color: #FF6666;
-  --blue-color: #89CFF0;
-  --pink-color: #FF9CCD;
+  --dark-bg-color: #0d1116;
+  --light-bg-color: #161c23;
+  --primary-btn-color: #81f495;
+  --red-color: #ff6666;
+  --blue-color: #89cff0;
+  --pink-color: #ff9ccd;
 }
 
 .container {
-	width: 100%;
+  width: 100%;
   padding-right: 20px;
   padding-left: 20px;
   margin-right: auto;
@@ -42,34 +46,18 @@ button {
 }
 
 .row {
-	display: flex;
-	flex-wrap: wrap;
-	margin-right: -16px;
-	margin-left: -16px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -16px;
+  margin-left: -16px;
 }
 
 .col {
-	position: relative;
-	width: 100%;
-	min-height: 1px;
-	padding-right: 16px;
-	padding-left: 16px
-}
-
-.df {
-  display: flex;
-}
-
-.jcc {
-  justify-content: center;
-}
-
-.aic {
-  align-items: center;
-}
-
-.vh-100 {
-  min-height: 100vh;
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 16px;
+  padding-left: 16px;
 }
 
 .btn {

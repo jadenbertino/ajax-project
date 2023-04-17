@@ -1,4 +1,4 @@
-.auth {
+.auth-prompt {
   background-color: var(--light-bg-color);
   width: 500px;
   padding: 40px 32px 60px;
@@ -10,10 +10,10 @@
   text-align: center;
 }
 
-.auth > *:not(:last-child) {
+.auth-prompt > *:not(:last-child) {
   margin-bottom: 24px;
 }
 
-.auth .redirect {
+.auth-prompt .redirect {
   color: var(--primary-btn-color);
 }

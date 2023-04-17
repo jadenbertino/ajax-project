@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuthContext } from '../../hooks/useAuthContext'
-import { doc, Timestamp, collection, addDoc } from 'firebase/firestore'
-import { db } from '../../firebase/init'
+import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { db } from '../../firebase/init';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 // styles
-import './Create.css'
-import avatar from './avatar.jpg'
+import './Create.css';
+import avatar from './avatar.jpg';
 
 export default function Create() {
-  const [name, setName] = useState('')
-  const [imgSrc, setImgSrc] = useState('')
-  const [previewImgSrc, setPreviewImgSrc] = useState(avatar)
-  const [error, setError] = useState('')
-  const { user } = useAuthContext()
-  const nav = useNavigate()
-  
+  const [name, setName] = useState('');
+  const [imgSrc, setImgSrc] = useState('');
+  const [previewImgSrc, setPreviewImgSrc] = useState(avatar);
+  const [error, setError] = useState('');
+  const { user } = useAuthContext();
+  const nav = useNavigate();
+
   function loadImg(src) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -24,82 +24,86 @@ export default function Create() {
       img.src = src;
     });
   }
-  
+
   async function handleImgSrcChange(src) {
     setImgSrc(src);
     try {
       const img = await loadImg(src); // throws error if invalid url
-      setPreviewImgSrc(img.src); // valid img url => change to it
+      setPreviewImgSrc(img.src);
     } catch {
-      setPreviewImgSrc(avatar); // invalid img url => default to placeholder value
+      setPreviewImgSrc(avatar);
     }
   }
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    setError(null)
-    
+    e.preventDefault();
+    setError(null);
+
     try {
-      // validation: imgSrc must 1) point to valid img or 2) be empty
+      // imgSrc must 1) point to valid img or 2) be empty
       if (imgSrc !== previewImgSrc && imgSrc !== '') {
-        throw new Error('Please enter a valid img url or leave empty')
+        throw new Error('Please enter a valid img url or leave empty');
       }
 
       const newConversation = {
         name,
         profilePhoto: imgSrc,
         conversationContent: [],
-        createdAt: Timestamp.now()
-      }
-      
+        createdAt: Timestamp.now(),
+      };
+
       // add new conversation as document in /users/{userID}/conversations/{conversationID}
-      const userDocRef = doc(db, "users", user.uid)
-      const conversationsCollectionRef = collection(userDocRef, 'conversations')
-      await addDoc(conversationsCollectionRef, newConversation)
-      nav('/')
+      const userDocRef = doc(db, 'users', user.uid);
+      const conversationsCollectionRef = collection(
+        userDocRef,
+        'conversations'
+      );
+      await addDoc(conversationsCollectionRef, newConversation);
+
+      nav('/');
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
   }
-  
+
   return (
-    <div className="fullscreen dfa">
-      <form className="create" onSubmit={handleSubmit}>
+    <div className='fullscreen dfa'>
+      <div className='create'>
         <h1 className='header'>Create New Conversation</h1>
-        <div className="row">
-          <div className="col left-col">
-            <img src={previewImgSrc} alt="" className='preview-img' />
+        <div className='form-wrapper'>
+          <div className='preview dfa'>
+            <img src={previewImgSrc} alt='' className='preview-img' />
           </div>
-          <div className="col right-col">
+          <form onSubmit={handleSubmit}>
             <label>
               <span>Name</span>
               <input
                 required
-                type="text"
+                type='text'
                 value={name}
-                onChange={e => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
               />
             </label>
             <label>
               <span>Profile Image URL</span>
               <input
                 className='img-src'
-                type="text"
+                type='text'
                 placeholder='optional'
                 value={imgSrc}
-                onChange={e => handleImgSrcChange(e.target.value)}
+                onChange={(e) => handleImgSrcChange(e.target.value)}
               />
             </label>
             {error && <p className='error'>{error}</p>}
-            <div className="btns">
-              <Link to="/">
-                <button className="btn cancel">Cancel</button>
+            <div className='btns'>
+              <Link to='/'>
+                <button className='btn cancel'>Cancel</button>
               </Link>
-              <button className="btn">Save</button>
+              <button className='btn'>Save</button>
             </div>
-          </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
-  )
+  );
 }

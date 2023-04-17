@@ -1,28 +1,25 @@
-import { useEffect, useState } from "react";
-import { db } from "../firebase/init";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { db } from '../firebase/init';
 
 export function useDocument(collectionName, id) {
-  const [document, setDocument] = useState(null)
-  const [error, setError] = useState(null)
+  const [document, setDocument] = useState(null);
+  const [error, setError] = useState(null);
 
   // realtime data for doc
   useEffect(() => {
-    if (!id) return
-    const ref = doc(db, collectionName, id)
+    if (!id) return;
+    const ref = doc(db, collectionName, id);
     const unsub = onSnapshot(ref, (doc) => {
-      if (doc.data()) {
-        setDocument({...doc.data(), id: doc.id})
-        setError(null)
-      } else {
-        setError('no such document exists')
-      }
+      if (!doc.data()) throw new Error(`No document with ID ${id} in ${collectionName} collection`)
+      setDocument({...doc.data(), id: doc.id})
+      setError(null)
     }, (err) => {
       console.log(err.message)
-      setError('failed to get document')
+      setError(err.message)
     })
-    return () => unsub()
-  }, [collectionName, id])
+    return () => unsub();
+  }, [collectionName, id]);
 
-  return { document, error }
+  return { document, error };
 }
