@@ -53,3 +53,19 @@
 .create .cancel {
   background-color: var(--red-color);
 }
+
+@media screen and (max-width: 576px) {
+  .form-wrapper {
+    flex-direction: column;
+  }
+
+  .create .btn {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .create .preview img {
+    height: 160px;
+    width: 160px;
+  }
+}

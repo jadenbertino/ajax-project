@@ -68,40 +68,42 @@ export default function Create() {
 
   return (
     <div className='fullscreen dfa'>
-      <div className='create'>
-        <h1 className='header'>Create New Conversation</h1>
-        <div className='form-wrapper'>
-          <div className='preview dfa'>
-            <img src={previewImgSrc} alt='' className='preview-img' />
-          </div>
-          <form onSubmit={handleSubmit}>
-            <label>
-              <span>Name</span>
-              <input
-                required
-                type='text'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </label>
-            <label>
-              <span>Profile Image URL</span>
-              <input
-                className='img-src'
-                type='text'
-                placeholder='optional'
-                value={imgSrc}
-                onChange={(e) => handleImgSrcChange(e.target.value)}
-              />
-            </label>
-            {error && <p className='error'>{error}</p>}
-            <div className='btns'>
-              <Link to='/'>
-                <button className='btn cancel'>Cancel</button>
-              </Link>
-              <button className='btn'>Save</button>
+      <div className='container dfa'>
+        <div className='create'>
+          <h1 className='header'>Create New Conversation</h1>
+          <div className='form-wrapper'>
+            <div className='preview dfa'>
+              <img src={previewImgSrc} alt='' className='preview-img' />
             </div>
-          </form>
+            <form onSubmit={handleSubmit}>
+              <label>
+                <span>Name</span>
+                <input
+                  required
+                  type='text'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </label>
+              <label>
+                <span>Profile Image URL</span>
+                <input
+                  className='img-src'
+                  type='text'
+                  placeholder='optional'
+                  value={imgSrc}
+                  onChange={(e) => handleImgSrcChange(e.target.value)}
+                />
+              </label>
+              {error && <p className='error'>{error}</p>}
+              <div className='btns'>
+                <Link to='/'>
+                  <button className='btn cancel'>Cancel</button>
+                </Link>
+                <button className='btn'>Save</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
