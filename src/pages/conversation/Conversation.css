@@ -180,6 +180,10 @@
     font-size: 28px;
   }
 
+  .view-conversation nav h2 {
+    font-size: 20px;
+  }
+
   .view-conversation p,
   .view-conversation .btn {
     font-size: 14px;
