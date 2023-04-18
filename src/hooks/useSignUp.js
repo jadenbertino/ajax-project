@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { auth } from "../firebase/init";
+import { auth, db } from "../firebase/init";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useAuthContext } from "./useAuthContext";
+import { doc, setDoc } from "firebase/firestore";
 
 export function useSignUp() {
   const [error, setError] = useState(null)
@@ -9,25 +10,28 @@ export function useSignUp() {
   const [isMounted, setIsMounted] = useState(true)
   const { setAuthContext } = useAuthContext()
 
-	// lowercase names because some of the firebase functions are pascalCase
   async function signup(displayName, email, password) {
     setError(null)
     setPending(true)
 
     try {
-      // signup user
       const response = await createUserWithEmailAndPassword(auth, email, password)
 
       if (!response) {
         throw new Error("Couldn't sign up user")
       }
 
-      // add display name
-      await updateProfile(response.user, {displayName})
-
       const user = response.user
+      await updateProfile(user, {displayName})
+      const docRef = doc(db, "users", user.uid)
+      const userDoc = {
+        email: user.email,
+        apiKey: '',
+        tokensUsed: 0,
+        gender: '',
+      }
+      await setDoc(docRef, userDoc)
 
-      // update context
       setAuthContext(prev => ({...prev, user }))
       
       if (isMounted) {
@@ -37,7 +41,7 @@ export function useSignUp() {
       
     } catch (err) {
       if (isMounted) {
-        console.log(err)
+        console.log(err.message)
         setError(err.message)
         setPending(false)
       }

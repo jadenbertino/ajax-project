@@ -5,16 +5,22 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--dark-bg-color);
+  color: #fff;
 }
 
-input, select, textarea, button {
+input,
+select,
+textarea,
+button {
   font-family: inherit;
 }
 
-a, a:visited {
+a,
+a:visited {
   text-decoration: none;
+  color: inherit;
 }
 
 button {
@@ -22,45 +28,36 @@ button {
 }
 
 :root {
-  --dark-bg-color: #0D1116;
-  --light-bg-color: #161C23;
-  --primary-btn-color: #81F495;
-  --male-color: #89CFF0;
-  --female-color: #FF9CCD;
+  --dark-bg-color: #0d1116;
+  --light-bg-color: #161c23;
+  --primary-btn-color: #81f495;
+  --red-color: #ff6666;
+  --blue-color: #89cff0;
+  --pink-color: #ff9ccd;
 }
 
 .container {
-  margin: 0 auto;
   width: 100%;
-  max-width: calc(1280px + 40px);
-  padding: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1280px;
 }
 
 .row {
-  margin: 0 -16px;
   display: flex;
+  flex-wrap: wrap;
+  margin-right: -16px;
+  margin-left: -16px;
 }
 
 .col {
   position: relative;
   width: 100%;
-  padding: 16px 0;
-}
-
-.df {
-  display: flex;
-}
-
-.jcc {
-  justify-content: center;
-}
-
-.aic {
-  align-items: center;
-}
-
-.vh-100 {
-  min-height: 100vh;
+  min-height: 1px;
+  padding-right: 16px;
+  padding-left: 16px;
 }
 
 .btn {
@@ -70,4 +67,37 @@ button {
   border: none;
   border-radius: 4px;
   padding: 12px;
+}
+
+.fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.dfa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Forms */
+
+form label {
+  display: flex;
+  flex-direction: column;
+}
+
+form label span {
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+form input {
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+form input:focus {
+  outline: var(--blue-color) 1px auto;
 }

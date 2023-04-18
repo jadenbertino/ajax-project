@@ -1,0 +1,71 @@
+.create {
+  width: 800px;
+  background-color: var(--light-bg-color);
+  padding: 40px;
+  border-radius: 8px;
+}
+
+.create .header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.create .form-wrapper {
+  display: flex;
+  justify-content: stretch;
+}
+
+.create .preview {
+  width: 100%;
+}
+
+.create .preview img {
+  height: 200px;
+  width: 200px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.create form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.create form > *:not(:last-child) {
+  margin-bottom: 24px;
+}
+
+.create .img-src::placeholder {
+  font-style: italic;
+}
+
+.create .btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.create .btn {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.create .cancel {
+  background-color: var(--red-color);
+}
+
+@media screen and (max-width: 576px) {
+  .form-wrapper {
+    flex-direction: column;
+  }
+
+  .create .btn {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .create .preview img {
+    height: 160px;
+    width: 160px;
+  }
+}

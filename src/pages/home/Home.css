@@ -1,5 +1,72 @@
+.home > .container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
 .home nav {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  height: 40px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.home main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.home .btn.signout {
+  background-color: var(--light-bg-color);
+  color: #fff;
+  font-weight: normal;
+}
+
+.home .conversations {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.home .conversation {
+  margin: 32px 16px 0;
+  width: 200px;
+  height: 200px;
+  background-color: var(--light-bg-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.home .conversation .name {
+  max-height: 40px;
+  overflow-y: hidden;
+}
+
+.home .conversation img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.home .fa-plus {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 576px) {
+  .home > .container {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
 }
