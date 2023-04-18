@@ -47,7 +47,7 @@ export default function Create() {
 
       const newConversation = {
         name,
-        profilePhoto: imgSrc,
+        profilePhotoSrc: imgSrc,
         conversationContent: [],
         createdAt: Timestamp.now(),
       };

@@ -44,13 +44,13 @@ export default function Home() {
           <h1>Select A Conversation:</h1>
           <div className='conversations'>
             {conversations
-              ? conversations.map(({ id, name, profilePhoto }) => (
+              ? conversations.map(({ id, name, profilePhotoSrc }) => (
                   <Link
                     className='conversation'
                     key={id}
                     to={`/conversations/${id}`}
                   >
-                    <img src={profilePhoto || avatar} alt='' />
+                    <img src={profilePhotoSrc || avatar} alt='' />
                     <p className='name'>{name}</p>
                   </Link>
                 ))

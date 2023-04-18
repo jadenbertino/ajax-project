@@ -1,6 +1,28 @@
+.conversation {
+  padding: 32px 0;
+}
+
+.conversation nav {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.conversation .profile-photo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.conversation .name {
+  margin-left: 24px;
+}
+
+.conversation .house-icon-wrapper {
+  margin-left: auto;
+}
+
 .conversation .fa-house {
-  position: absolute;
-  top: 32px;
-  right: 40px;
   font-size: 32px;
 }

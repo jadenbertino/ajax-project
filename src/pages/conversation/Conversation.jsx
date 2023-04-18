@@ -12,9 +12,15 @@ export default function Conversation() {
   const [conversationsRef, setConversationsRef] = useState(null);
   const nav = useNavigate();
   const { document: conversationDoc } = useSubdocument(conversationsRef, conversationID);
+  const [profilePhotoSrc, setProfilePhotoSrc] = useState('./avatar.jpg');
+  const [conversationName, setConversationName] = useState('')
+  console.log(conversationDoc);
 
   useEffect(() => {
-    if (!user) nav('/');
+    if (!user) {
+      nav('/');
+      return;
+    }
 
     const usersRef = collection(db, 'users');
     const userDocRef = doc(usersRef, user.uid);
@@ -22,13 +28,27 @@ export default function Conversation() {
     setConversationsRef(conversationsRef);
   }, [user, nav]);
 
+  useEffect(() => {
+    if (!conversationDoc) return;
+    const { profilePhotoSrc, name } = conversationDoc
+    setProfilePhotoSrc(profilePhotoSrc);
+    setConversationName(name)
+  }, [conversationDoc]);
+
   return (
     <div className='conversation'>
-      <nav>
-        <Link to='/'>
-          <i className='fa-solid fa-house'></i>
-        </Link>
-      </nav>
+      <div className='container'>
+        <nav>
+          <img src={profilePhotoSrc} alt='' className='profile-photo' />
+          <h2 className='name'>{conversationName}</h2>
+          <Link to='/' className='house-icon-wrapper'>
+            <i className='fa-solid fa-house'></i>
+          </Link>
+        </nav>
+        <main>
+          
+        </main>
+      </div>
     </div>
   );
 }
