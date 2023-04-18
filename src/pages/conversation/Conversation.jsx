@@ -82,8 +82,10 @@ export default function Conversation() {
     <>
       <div className='view-conversation container'>
         <nav>
-          <img src={profilePhotoSrc} alt='' className='profile-photo' />
-          <h2>{conversationName}</h2>
+          <Link to="/" class="profile">
+            <img src={profilePhotoSrc} alt='' className='profile-photo' />
+            <h2>{conversationName}</h2>
+          </Link>
           <Link to='/' className='house-icon-wrapper'>
             <i className='fa-solid fa-house'></i>
           </Link>
