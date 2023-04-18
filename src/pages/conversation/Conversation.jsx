@@ -20,7 +20,7 @@ export default function Conversation() {
   const { conversationID } = useParams();
   const [conversationsRef, setConversationsRef] = useState(null);
   const { document: conversationDoc } = useSubdocument(conversationsRef, conversationID);
-  const [conversationContent, setConversationContent] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('./avatar.jpg');
   const [modalPrompt, setModalPrompt] = useState(null);
@@ -39,10 +39,10 @@ export default function Conversation() {
 
   useEffect(() => {
     if (!conversationDoc) return;
-    const { profilePhotoSrc, name, conversationContent } = conversationDoc;
+    const { profilePhotoSrc, name, messages } = conversationDoc;
     setProfilePhotoSrc(profilePhotoSrc);
     setConversationName(name);
-    setConversationContent(conversationContent);
+    setMessages(messages);
   }, [conversationDoc]);
 
   async function handleNewMessage(e) {
@@ -51,7 +51,7 @@ export default function Conversation() {
       const messageType = modalPrompt === 'Add Her Message' ? 'RECEIVED' : 'SENT';
       const message = {
         type: messageType,
-        message: newMessageText,
+        textContent: newMessageText,
         timestamp: Timestamp.now(),
       };
 
@@ -59,9 +59,9 @@ export default function Conversation() {
       const conversationRef = doc(conversationsRef, conversationID);
       const conversationSnap = await getDoc(conversationRef);
       if (!conversationSnap.exists()) throw new Error('Invalid document ID');
-      const { conversationContent } = conversationSnap.data();
-      conversationContent.push(message);
-      await setDoc(conversationRef, { conversationContent }, { merge: true });
+      const { messages } = conversationSnap.data();
+      messages.push(message);
+      await setDoc(conversationRef, { messages }, { merge: true });
 
       setNewMessageText('');
       closeModal();
@@ -84,7 +84,7 @@ export default function Conversation() {
           <i className='fa-solid fa-house'></i>
         </Link>
       </nav>
-      <RenderMessages conversationContent={conversationContent} />
+      <RenderMessages messages={messages} />
       <div className='new-message-btns'>
         <div className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
           Add Her Message

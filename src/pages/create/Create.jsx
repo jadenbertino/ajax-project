@@ -48,7 +48,7 @@ export default function Create() {
       const newConversation = {
         name,
         profilePhotoSrc: imgSrc,
-        conversationContent: [],
+        messages: [],
         createdAt: Timestamp.now(),
       };
 

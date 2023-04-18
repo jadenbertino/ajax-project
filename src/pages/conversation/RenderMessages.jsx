@@ -1,23 +1,23 @@
 import { useEffect, useRef } from "react";
 
-export default function RenderMessages({ conversationContent }) {
+export default function RenderMessages({ messages }) {
   const lastMessageRef = useRef(null)
   
   useEffect(() => {
     if (!lastMessageRef.current) return;
     lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [conversationContent])
+  }, [messages])
 
   return (
     <div className="messages-wrapper">
       <div className='messages'>
-        {conversationContent && conversationContent.map((message, i) => (
+        {messages && messages.map((message, i) => (
           <div 
             key={i} 
             className={`message ${message.type.toLowerCase()}`}
-            ref={i === conversationContent.length - 1 ? lastMessageRef : null}
+            ref={i === messages.length - 1 ? lastMessageRef : null}
           >
-            <p>{message.message}</p>
+            <p>{message.textContent}</p>
           </div>
         ))}
       </div>
