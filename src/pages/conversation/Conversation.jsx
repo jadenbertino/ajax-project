@@ -1,4 +1,4 @@
-import { collection, doc } from '@firebase/firestore';
+import { collection, doc, getDoc, setDoc } from '@firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Modal from '../../components/Modal';
@@ -16,8 +16,7 @@ export default function Conversation() {
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('./avatar.jpg');
   const [conversationName, setConversationName] = useState('');
   const [modalPrompt, setModalPrompt] = useState(null);
-  const [newMessage, setNewMessage] = useState('');
-  // console.log(conversationDoc);
+  const [messageContent, setMessageContent] = useState('');
 
   useEffect(() => {
     if (!user) {
@@ -25,8 +24,7 @@ export default function Conversation() {
       return;
     }
 
-    const usersRef = collection(db, 'users');
-    const userDocRef = doc(usersRef, user.uid);
+    const userDocRef = doc(db, 'users', user.uid);
     const conversationsRef = collection(userDocRef, 'conversations');
     setConversationsRef(conversationsRef);
   }, [user, nav]);
@@ -38,9 +36,31 @@ export default function Conversation() {
     setConversationName(name);
   }, [conversationDoc]);
 
-  function handleNewMessage(e) {
+  async function handleNewMessage(e) {
     e.preventDefault()
-    console.log('submit')
+    try {
+      // create message
+      const messageType = modalPrompt === 'Add Her Message' ? 'RECEIVED' : 'SENT'
+      const message = {
+        type: messageType,
+        message: messageContent
+      }
+
+      // add message to firestore
+      const conversationRef = doc(conversationsRef, conversationID)
+      const conversationSnap = await getDoc(conversationRef)
+      if (!conversationSnap.exists()) throw new Error ('Invalid document ID')
+      const { conversationContent } = conversationSnap.data()
+      conversationContent.push(message)
+      await setDoc(conversationRef, { conversationContent }, { merge: true })
+
+      // reset message content + close modal
+      setMessageContent('')
+      closeModal()
+    } catch(err) {
+      console.log(err.message)
+      closeModal()
+    }
   }
 
   function closeModal() {
@@ -48,7 +68,7 @@ export default function Conversation() {
   }
 
   return (
-    <div className='conversation container'>
+    <div className='view-conversation container'>
       <nav>
         <img src={profilePhotoSrc} alt='' className='profile-photo' />
         <h2 className='name'>{conversationName}</h2>
@@ -74,7 +94,7 @@ export default function Conversation() {
         <Modal closeModal={closeModal}>
           <form onSubmit={handleNewMessage} className={`new-message-form ${modalPrompt === 'Add Her Message' ? 'received' : 'sent'}`}>
             <h2>{modalPrompt}</h2>
-            <textarea onChange={(e) => setNewMessage(e.target.value)} value={newMessage} required />
+            <textarea onChange={(e) => setMessageContent(e.target.value)} value={messageContent} required />
             <div className="btns">
               <button className="btn cancel" type='button' onClick={closeModal}>Cancel</button>
               <button className='btn submit'>Add New Message</button>

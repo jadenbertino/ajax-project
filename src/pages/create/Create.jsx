@@ -54,10 +54,7 @@ export default function Create() {
 
       // add new conversation as document in /users/{userID}/conversations/{conversationID}
       const userDocRef = doc(db, 'users', user.uid);
-      const conversationsCollectionRef = collection(
-        userDocRef,
-        'conversations'
-      );
+      const conversationsCollectionRef = collection(userDocRef, 'conversations');
       await addDoc(conversationsCollectionRef, newConversation);
 
       nav('/');

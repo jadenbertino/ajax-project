@@ -1,32 +1,32 @@
-.conversation {
+.view-conversation {
   padding: 32px 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-.conversation nav {
+.view-conversation nav {
   display: flex;
   align-items: center;
   padding: 0 12px;
 }
 
-.conversation .profile-photo {
+.view-conversation .profile-photo {
   width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 50%;
 }
 
-.conversation .name {
+.view-conversation .name {
   margin-left: 24px;
 }
 
-.conversation .house-icon-wrapper {
+.view-conversation .house-icon-wrapper {
   margin-left: auto;
 }
 
-.conversation .fa-house {
+.view-conversation .fa-house {
   font-size: 32px;
 }
 
@@ -43,10 +43,19 @@
   background-color: var(--blue-color);
 }
 
-main {
+.view-conversation main {
   flex-grow: 1;
   display: grid;
   grid-template: 1fr / 1fr 1fr;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex-grow: 1;
 }
 
 .modal:has(.new-message-form) {
