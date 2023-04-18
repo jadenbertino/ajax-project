@@ -74,6 +74,7 @@ export default function Conversation() {
   }
 
   function closeModal() {
+    setNewMessageText('')
     setModalPrompt(null);
   }
 
@@ -112,6 +113,7 @@ export default function Conversation() {
               onChange={(e) => setNewMessageText(e.target.value)}
               value={newMessageText}
               required
+              autoFocus
             />
             <div className='btns'>
               <button className='btn cancel' type='button' onClick={closeModal}>
