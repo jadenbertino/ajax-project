@@ -56,6 +56,38 @@
 
 .content {
   flex-grow: 1;
+  border: 1px #fff solid;
+  margin: 24px 0;
+  border-radius: 4px;
+  padding: 12px;
+  overflow-y: scroll;
+}
+
+.content .received,
+.content .sent {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.content .sent {
+  justify-content: flex-end;
+}
+
+.content p {
+  color: var(--dark-bg-color);
+  font-weight: bold;
+  padding: 8px;
+  border-radius: 4px;
+  max-width: 75%;
+  overflow-wrap: anywhere;
+}
+
+.content .received p {
+  background-color: var(--pink-color);
+}
+
+.content .sent p {
+  background-color: var(--blue-color);
 }
 
 .modal:has(.new-message-form) {
@@ -87,7 +119,5 @@
 }
 
 .new-message-form.sent .btn.submit {
-  background-color: var(--blue-color)
+  background-color: var(--blue-color);
 }
-
-
