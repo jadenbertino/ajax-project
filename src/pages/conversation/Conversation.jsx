@@ -19,7 +19,7 @@ export default function Conversation() {
   const [modalPrompt, setModalPrompt] = useState(null);
   const [messageContent, setMessageContent] = useState('');
   const [conversationContent, setConversationContent] = useState([]);
-
+  
   useEffect(() => {
     if (!user) {
       nav('/');
@@ -80,20 +80,16 @@ export default function Conversation() {
           <i className='fa-solid fa-house'></i>
         </Link>
       </nav>
-      <main>
-        <div className='history'>
-          <RenderConversation conversationContent={conversationContent}/>
-          <div className='new-message-btns'>
-            <div className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
-              Add Her Message
-            </div>
-            <div className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
-              Add Your Message
-            </div>
-          </div>
+      <RenderConversation conversationContent={conversationContent}/>
+      <div className='new-message-btns'>
+        <div className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
+          Add Her Message
         </div>
-        <div className='message-generation'>{/* for later */}</div>
-      </main>
+        <div className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
+          Add Your Message
+        </div>
+      </div>
+      <div className='generate-message'>{/* for later */}</div>
       {modalPrompt && (
         <Modal closeModal={closeModal}>
           <form

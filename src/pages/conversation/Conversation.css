@@ -1,79 +1,75 @@
 .view-conversation {
-  padding: 32px 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  padding: 12px 0 16px;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 120px 1fr 68px;
 }
 
+/*
+
+    NAV
+
+*/
+
 .view-conversation nav {
+  grid-column: 1 / span 2;
   display: flex;
   align-items: center;
   padding: 0 12px;
 }
 
-.view-conversation .profile-photo {
+.view-conversation nav .profile-photo {
   width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 50%;
 }
 
-.view-conversation .name {
+.view-conversation nav .name {
   margin-left: 24px;
 }
 
-.view-conversation .house-icon-wrapper {
+.view-conversation nav .house-icon-wrapper {
   margin-left: auto;
 }
 
-.view-conversation .fa-house {
+.view-conversation nav .fa-house {
   font-size: 32px;
 }
 
-.new-message-btns {
-  display: flex;
-  justify-content: space-between;
-}
+/*
 
-.btn.received {
-  background-color: var(--pink-color);
-}
+    MESSAGE HISTORY
 
-.btn.sent {
-  background-color: var(--blue-color);
-}
+*/
 
-.view-conversation main {
-  flex-grow: 1;
-  display: grid;
-  grid-template: 1fr / 1fr 1fr;
-}
-
-.history {
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex-grow: 1;
+.messages-wrapper {
+  position: relative;
+  overflow: auto;
   border: 1px #fff solid;
-  margin: 24px 0;
   border-radius: 4px;
-  padding: 12px;
-  overflow-y: scroll;
 }
 
-.content .received,
-.content .sent {
+.messages {
+  padding: 12px;
+  min-height: 100%;
+}
+
+.message {
   display: flex;
   margin-bottom: 16px;
 }
 
-.content .sent {
+.message:last-child {
+  margin-bottom: 0;
+}
+
+.messages .sent {
   justify-content: flex-end;
 }
 
-.content p {
+.message p {
   color: var(--dark-bg-color);
   font-weight: bold;
   padding: 8px;
@@ -82,11 +78,33 @@
   overflow-wrap: anywhere;
 }
 
-.content .received p {
+.message.received p {
   background-color: var(--pink-color);
 }
 
-.content .sent p {
+.message.sent p {
+  background-color: var(--blue-color);
+}
+
+/*
+
+    ADD TO CONVERSATION HISTORY
+
+*/
+
+.new-message-btns {
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.btn.received {
+  background-color: var(--pink-color);
+}
+
+.btn.sent {
   background-color: var(--blue-color);
 }
 
@@ -120,4 +138,15 @@
 
 .new-message-form.sent .btn.submit {
   background-color: var(--blue-color);
+}
+
+/*
+
+    GENERATE NEW MESSAGE
+
+*/
+
+.view-conversation .generate-message {
+  grid-column: 2 / 3;
+  grid-row: 2 / 4;
 }
