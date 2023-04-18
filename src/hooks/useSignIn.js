@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from '@firebase/auth';
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase/init';
 import { useAuthContext } from './useAuthContext';

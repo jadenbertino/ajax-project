@@ -1,5 +1,5 @@
 .view-conversation {
-  padding: 12px 0 16px;
+  padding-bottom: 20px;
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;

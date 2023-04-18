@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function RenderConversation({ conversationContent }) {
+export default function RenderMessages({ conversationContent }) {
   const lastMessageRef = useRef(null)
   
   useEffect(() => {

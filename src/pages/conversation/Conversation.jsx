@@ -1,25 +1,31 @@
-import { Timestamp, collection, doc, getDoc, setDoc } from '@firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import Modal from '../../components/Modal';
-import { db } from '../../firebase/init';
 import { useAuthContext } from '../../hooks/useAuthContext';
+
+// firestore
+import { Timestamp, collection, doc, getDoc, setDoc } from '@firebase/firestore';
+import { db } from '../../firebase/init';
 import { useSubdocument } from '../../hooks/useSubdocument';
+
+// components
+import Modal from '../../components/Modal';
+import RenderMessages from './RenderMessages';
+
+// styles
 import './Conversation.css';
-import RenderConversation from './RenderConversation';
 
 export default function Conversation() {
-  const { conversationID } = useParams();
   const { user } = useAuthContext();
-  const [conversationsRef, setConversationsRef] = useState(null);
   const nav = useNavigate();
+  const { conversationID } = useParams();
+  const [conversationsRef, setConversationsRef] = useState(null);
   const { document: conversationDoc } = useSubdocument(conversationsRef, conversationID);
-  const [profilePhotoSrc, setProfilePhotoSrc] = useState('./avatar.jpg');
-  const [conversationName, setConversationName] = useState('');
-  const [modalPrompt, setModalPrompt] = useState(null);
-  const [messageContent, setMessageContent] = useState('');
   const [conversationContent, setConversationContent] = useState([]);
-  
+  const [conversationName, setConversationName] = useState('');
+  const [profilePhotoSrc, setProfilePhotoSrc] = useState('./avatar.jpg');
+  const [modalPrompt, setModalPrompt] = useState(null);
+  const [newMessageText, setNewMessageText] = useState('');
+
   useEffect(() => {
     if (!user) {
       nav('/');
@@ -42,12 +48,11 @@ export default function Conversation() {
   async function handleNewMessage(e) {
     e.preventDefault();
     try {
-      // create message
       const messageType = modalPrompt === 'Add Her Message' ? 'RECEIVED' : 'SENT';
       const message = {
         type: messageType,
-        message: messageContent,
-        timestamp: Timestamp.now()
+        message: newMessageText,
+        timestamp: Timestamp.now(),
       };
 
       // add message to firestore
@@ -58,8 +63,7 @@ export default function Conversation() {
       conversationContent.push(message);
       await setDoc(conversationRef, { conversationContent }, { merge: true });
 
-      // reset message content + close modal
-      setMessageContent('');
+      setNewMessageText('');
       closeModal();
     } catch (err) {
       console.log(err.message);
@@ -80,7 +84,7 @@ export default function Conversation() {
           <i className='fa-solid fa-house'></i>
         </Link>
       </nav>
-      <RenderConversation conversationContent={conversationContent}/>
+      <RenderMessages conversationContent={conversationContent} />
       <div className='new-message-btns'>
         <div className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
           Add Her Message
@@ -100,8 +104,8 @@ export default function Conversation() {
           >
             <h2>{modalPrompt}</h2>
             <textarea
-              onChange={(e) => setMessageContent(e.target.value)}
-              value={messageContent}
+              onChange={(e) => setNewMessageText(e.target.value)}
+              value={newMessageText}
               required
             />
             <div className='btns'>

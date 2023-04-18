@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc } from '@firebase/firestore';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase/init';

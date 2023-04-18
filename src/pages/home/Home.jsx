@@ -7,7 +7,7 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import { useSignOut } from '../../hooks/useSignOut';
 
 // firestore
-import { doc } from 'firebase/firestore';
+import { doc } from '@firebase/firestore';
 import { db } from '../../firebase/init';
 import { useSubcollection } from '../../hooks/useSubcollection';
 
