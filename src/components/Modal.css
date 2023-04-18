@@ -1,0 +1,48 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(5px) brightness(60%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal {
+  border-radius: 8px;
+  background-color: var(--light-bg-color);
+  color: #EAF2EF;
+  padding: 24px;
+  position: relative;
+  z-index: 102;
+}
+
+.modal input {
+  background-color: #EAF2EF;
+  color: #31343f;
+}
+
+.modal-actions {
+  position: absolute;
+  top: 8px; 
+  right: 16px;
+}
+
+.modal-icon {
+  background-color: transparent;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  color: #EAF2EF;
+  padding: 16px 12px;
+}
+
+.close-modal-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 101;
+}

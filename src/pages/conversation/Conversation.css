@@ -1,5 +1,8 @@
 .conversation {
   padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .conversation nav {
@@ -26,3 +29,56 @@
 .conversation .fa-house {
   font-size: 32px;
 }
+
+.new-message-btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn.received {
+  background-color: var(--pink-color);
+}
+
+.btn.sent {
+  background-color: var(--blue-color);
+}
+
+main {
+  flex-grow: 1;
+  display: grid;
+  grid-template: 1fr / 1fr 1fr;
+}
+
+.modal:has(.new-message-form) {
+  max-width: 400px;
+  width: 100%;
+}
+
+.new-message-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-message-form textarea {
+  margin: 16px 0;
+  min-height: 200px;
+}
+
+.new-message-form .btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.new-message-form .btn.cancel {
+  background-color: lightgray;
+}
+
+.new-message-form.received .btn.submit {
+  background-color: var(--pink-color);
+}
+
+.new-message-form.sent .btn.submit {
+  background-color: var(--blue-color)
+}
+
+
