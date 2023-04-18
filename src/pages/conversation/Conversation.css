@@ -24,10 +24,7 @@
   height: 80px;
   object-fit: cover;
   border-radius: 50%;
-}
-
-.view-conversation nav .name {
-  margin-left: 24px;
+  margin-right: 24px;
 }
 
 .view-conversation nav .house-icon-wrapper {
@@ -78,19 +75,17 @@
   overflow-wrap: anywhere;
 }
 
-.message.received p {
+.message.received p,
+.new-message-btns .btn.received,
+.new-message-form.received .btn.submit {
   background-color: var(--pink-color);
 }
 
-.message.sent p {
+.message.sent p,
+.new-message-btns .btn.sent,
+.new-message-form.sent .btn.submit {
   background-color: var(--blue-color);
 }
-
-/*
-
-    ADD TO CONVERSATION HISTORY
-
-*/
 
 .new-message-btns {
   grid-column: 1 / 2;
@@ -100,13 +95,11 @@
   align-items: flex-end;
 }
 
-.btn.received {
-  background-color: var(--pink-color);
-}
+/*
 
-.btn.sent {
-  background-color: var(--blue-color);
-}
+    ADD TO CONVERSATION HISTORY MODAL
+
+*/
 
 .modal:has(.new-message-form) {
   max-width: 400px;
@@ -116,6 +109,10 @@
 .new-message-form {
   display: flex;
   flex-direction: column;
+}
+
+.new-message-form h2 {
+  text-align: center;
 }
 
 .new-message-form textarea {
@@ -130,14 +127,6 @@
 
 .new-message-form .btn.cancel {
   background-color: lightgray;
-}
-
-.new-message-form.received .btn.submit {
-  background-color: var(--pink-color);
-}
-
-.new-message-form.sent .btn.submit {
-  background-color: var(--blue-color);
 }
 
 /*

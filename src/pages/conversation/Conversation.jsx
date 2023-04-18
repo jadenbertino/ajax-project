@@ -17,14 +17,16 @@ import './Conversation.css';
 export default function Conversation() {
   const { user } = useAuthContext();
   const nav = useNavigate();
+  const [modalPrompt, setModalPrompt] = useState(null);
+  const [newMessageText, setNewMessageText] = useState('');
+
+  // fetch conversation
   const { conversationID } = useParams();
   const [conversationsRef, setConversationsRef] = useState(null);
   const { document: conversationDoc } = useSubdocument(conversationsRef, conversationID);
-  const [messages, setMessages] = useState([]);
   const [conversationName, setConversationName] = useState('');
-  const [profilePhotoSrc, setProfilePhotoSrc] = useState('./avatar.jpg');
-  const [modalPrompt, setModalPrompt] = useState(null);
-  const [newMessageText, setNewMessageText] = useState('');
+  const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (!user) {
@@ -40,7 +42,7 @@ export default function Conversation() {
   useEffect(() => {
     if (!conversationDoc) return;
     const { profilePhotoSrc, name, messages } = conversationDoc;
-    setProfilePhotoSrc(profilePhotoSrc);
+    setProfilePhotoSrc(profilePhotoSrc || '/avatar.jpg');
     setConversationName(name);
     setMessages(messages);
   }, [conversationDoc]);
@@ -76,24 +78,27 @@ export default function Conversation() {
   }
 
   return (
-    <div className='view-conversation container'>
-      <nav>
-        <img src={profilePhotoSrc} alt='' className='profile-photo' />
-        <h2 className='name'>{conversationName}</h2>
-        <Link to='/' className='house-icon-wrapper'>
-          <i className='fa-solid fa-house'></i>
-        </Link>
-      </nav>
-      <RenderMessages messages={messages} />
-      <div className='new-message-btns'>
-        <div className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
-          Add Her Message
+    <>
+      <div className='view-conversation container'>
+        <nav>
+          <img src={profilePhotoSrc} alt='' className='profile-photo' />
+          <h2>{conversationName}</h2>
+          <Link to='/' className='house-icon-wrapper'>
+            <i className='fa-solid fa-house'></i>
+          </Link>
+        </nav>
+        <RenderMessages messages={messages} />
+        <div className='new-message-btns'>
+          <div className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
+            Add Her Message
+          </div>
+          <div className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
+            Add Your Message
+          </div>
         </div>
-        <div className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
-          Add Your Message
-        </div>
+        <div className='generate-message'>{/* for later */}</div>
       </div>
-      <div className='generate-message'>{/* for later */}</div>
+      
       {modalPrompt && (
         <Modal closeModal={closeModal}>
           <form
@@ -117,6 +122,6 @@ export default function Conversation() {
           </form>
         </Modal>
       )}
-    </div>
+    </>
   );
 }
