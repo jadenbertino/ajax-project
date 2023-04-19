@@ -92,12 +92,14 @@ form label span {
   text-align: left;
 }
 
-form input {
+form input,
+form textarea {
   border: none;
   border-radius: 4px;
   padding: 8px;
 }
 
-form input:focus {
+form input:focus,
+form textarea:focus {
   outline: var(--blue-color) 1px auto;
 }

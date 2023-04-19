@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc } from '@firebase/firestore';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase/init';
@@ -6,12 +6,11 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 
 // styles
 import './Create.css';
-import avatar from './avatar.jpg';
 
 export default function Create() {
   const [name, setName] = useState('');
   const [imgSrc, setImgSrc] = useState('');
-  const [previewImgSrc, setPreviewImgSrc] = useState(avatar);
+  const [previewImgSrc, setPreviewImgSrc] = useState('/avatar.jpg');
   const [error, setError] = useState('');
   const { user } = useAuthContext();
   const nav = useNavigate();
@@ -31,7 +30,7 @@ export default function Create() {
       const img = await loadImg(src); // throws error if invalid url
       setPreviewImgSrc(img.src);
     } catch {
-      setPreviewImgSrc(avatar);
+      setPreviewImgSrc('/avatar.jpg');
     }
   }
 
@@ -47,17 +46,14 @@ export default function Create() {
 
       const newConversation = {
         name,
-        profilePhoto: imgSrc,
-        conversationContent: [],
+        profilePhotoSrc: imgSrc,
+        messages: [],
         createdAt: Timestamp.now(),
       };
 
       // add new conversation as document in /users/{userID}/conversations/{conversationID}
       const userDocRef = doc(db, 'users', user.uid);
-      const conversationsCollectionRef = collection(
-        userDocRef,
-        'conversations'
-      );
+      const conversationsCollectionRef = collection(userDocRef, 'conversations');
       await addDoc(conversationsCollectionRef, newConversation);
 
       nav('/');

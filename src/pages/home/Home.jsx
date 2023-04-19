@@ -7,13 +7,12 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import { useSignOut } from '../../hooks/useSignOut';
 
 // firestore
-import { doc } from 'firebase/firestore';
+import { doc } from '@firebase/firestore';
 import { db } from '../../firebase/init';
 import { useSubcollection } from '../../hooks/useSubcollection';
 
 // styles
 import './Home.css';
-import avatar from './avatar.jpg';
 
 export default function Home() {
   const { user } = useAuthContext();
@@ -44,13 +43,13 @@ export default function Home() {
           <h1>Select A Conversation:</h1>
           <div className='conversations'>
             {conversations
-              ? conversations.map(({ id, name, profilePhoto }) => (
+              ? conversations.map(({ id, name, profilePhotoSrc }) => (
                   <Link
                     className='conversation'
                     key={id}
                     to={`/conversations/${id}`}
                   >
-                    <img src={profilePhoto || avatar} alt='' />
+                    <img src={profilePhotoSrc || '/avatar.jpg'} alt='' />
                     <p className='name'>{name}</p>
                   </Link>
                 ))
