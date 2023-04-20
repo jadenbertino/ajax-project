@@ -14,6 +14,8 @@ import RenderMessages from './RenderMessages';
 // styles
 import './Conversation.css';
 
+const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY
+
 export default function Conversation() {
   const { user } = useAuthContext();
   const nav = useNavigate();
@@ -27,7 +29,7 @@ export default function Conversation() {
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messages, setMessages] = useState([]);
-  const [prompt, setPrompt] = useState('');
+  const [userPrompt, setUserPrompt] = useState('');
   const [generatedMessages, setGeneratedMessages] = useState([]);
 
   useEffect(() => {
@@ -77,7 +79,7 @@ export default function Conversation() {
 
   async function handleMessageGeneration(e) {
     e.preventDefault()
-    console.log(prompt)
+    console.log(userPrompt)
   }
 
   function closeModal() {
@@ -115,8 +117,8 @@ export default function Conversation() {
             <label>
               <span>Prompt:</span>
               <textarea 
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                value={userPrompt}
+                onChange={(e) => setUserPrompt(e.target.value)}
               />
             </label>
             <button className="btn">Generate Rizz!</button>
