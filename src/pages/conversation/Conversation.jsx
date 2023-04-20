@@ -27,6 +27,8 @@ export default function Conversation() {
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messages, setMessages] = useState([]);
+  const [prompt, setPrompt] = useState('');
+  const [generatedMessages, setGeneratedMessages] = useState([]);
 
   useEffect(() => {
     if (!user) {
@@ -73,6 +75,11 @@ export default function Conversation() {
     }
   }
 
+  async function handleMessageGeneration(e) {
+    e.preventDefault()
+    console.log(prompt)
+  }
+
   function closeModal() {
     setNewMessageText('')
     setModalPrompt(null);
@@ -82,7 +89,7 @@ export default function Conversation() {
     <>
       <div className='view-conversation container'>
         <nav>
-          <Link to="/" class="profile">
+          <Link to="/" className="profile">
             <img src={profilePhotoSrc} alt='' className='profile-photo' />
             <h2>{conversationName}</h2>
           </Link>
@@ -90,16 +97,31 @@ export default function Conversation() {
             <i className='fa-solid fa-house'></i>
           </Link>
         </nav>
-        <RenderMessages messages={messages} />
-        <div className='new-message-btns'>
-          <div className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
-            Add Her Message
-          </div>
-          <div className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
-            Add Your Message
+
+        <div className="conversation-history">
+          <RenderMessages messages={messages} />
+          <div className='new-message-btns'>
+            <button className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
+              Add Her Message
+            </button>
+            <button className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
+              Add Your Message
+            </button>
           </div>
         </div>
-        <div className='generate-message'>{/* for later */}</div>
+
+        <div className='generate-message'>
+          <form onSubmit={handleMessageGeneration}>
+            <label>
+              <span>Prompt:</span>
+              <textarea 
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+              />
+            </label>
+            <button className="btn">Generate Rizz!</button>
+          </form>
+        </div>
       </div>
       
       {modalPrompt && (
