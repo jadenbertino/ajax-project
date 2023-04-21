@@ -17,7 +17,7 @@ export default function RenderMessages({ messages }) {
             className={`message ${message.type.toLowerCase()}`}
             ref={i === messages.length - 1 ? lastMessageRef : null}
           >
-            <p>{message.textContent}</p>
+            <p>{message.content}</p>
           </div>
         ))}
       </div>

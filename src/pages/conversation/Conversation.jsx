@@ -1,3 +1,4 @@
+import { Configuration, OpenAIApi } from 'openai';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
@@ -14,7 +15,12 @@ import RenderMessages from './RenderMessages';
 // styles
 import './Conversation.css';
 
-const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY
+// openai
+const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
+const configuration = new Configuration({
+  apiKey: OPEN_AI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 export default function Conversation() {
   const { user } = useAuthContext();
@@ -28,7 +34,7 @@ export default function Conversation() {
   const { document: conversationDoc } = useSubdocument(conversationsRef, conversationID);
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
-  const [messages, setMessages] = useState([]);
+  const [messageHistory, setMessageHistory] = useState([]);
   const [userPrompt, setUserPrompt] = useState('');
   const [generatedMessages, setGeneratedMessages] = useState([]);
 
@@ -48,7 +54,7 @@ export default function Conversation() {
     const { profilePhotoSrc, name, messages } = conversationDoc;
     setProfilePhotoSrc(profilePhotoSrc || '/avatar.jpg');
     setConversationName(name);
-    setMessages(messages);
+    setMessageHistory(messages);
   }, [conversationDoc]);
 
   async function handleNewMessage(e) {
@@ -57,7 +63,7 @@ export default function Conversation() {
       const messageType = modalPrompt === 'Add Her Message' ? 'RECEIVED' : 'SENT';
       const message = {
         type: messageType,
-        textContent: newMessageText,
+        content: newMessageText,
         timestamp: Timestamp.now(),
       };
 
@@ -78,12 +84,33 @@ export default function Conversation() {
   }
 
   async function handleMessageGeneration(e) {
-    e.preventDefault()
-    console.log(userPrompt)
+    e.preventDefault();
+    if (!messageHistory.length) return;
+
+    const messages = messageHistory.map((message) => ({
+      type: message.type === 'RECEIVED' ? 'user' : 'system',
+      content: message.content,
+    }));
+    const firstMessage = `Let's play a game. Pretend that I am a 20 year old girl and you are a 20 year old boy. We are flirting on Tinder.
+    Each of your messages should do one or more of the following: 1) get to know me better 2) share info about things we have in common
+    Here are your rules: 1) keep your messages similar in length to mine 2) use lowercase words and chatspeak 3) no emojis 4) one question max per response
+    Let's begin, here's my first message: ${messages[0].content}`;
+    messages[0] = firstMessage
+
+    try {
+      const chatCompletions = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages,
+        n: 5,
+      })
+      console.log(chatCompletions)
+    } catch (err) {
+      console.log(err.message)
+    }
   }
 
   function closeModal() {
-    setNewMessageText('')
+    setNewMessageText('');
     setModalPrompt(null);
   }
 
@@ -91,7 +118,7 @@ export default function Conversation() {
     <>
       <div className='view-conversation container'>
         <nav>
-          <Link to="/" className="profile">
+          <Link to='/' className='profile'>
             <img src={profilePhotoSrc} alt='' className='profile-photo' />
             <h2>{conversationName}</h2>
           </Link>
@@ -100,8 +127,8 @@ export default function Conversation() {
           </Link>
         </nav>
 
-        <div className="conversation-history">
-          <RenderMessages messages={messages} />
+        <div className='conversation-history'>
+          <RenderMessages messages={messageHistory} />
           <div className='new-message-btns'>
             <button className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
               Add Her Message
@@ -116,16 +143,13 @@ export default function Conversation() {
           <form onSubmit={handleMessageGeneration}>
             <label>
               <span>Prompt:</span>
-              <textarea 
-                value={userPrompt}
-                onChange={(e) => setUserPrompt(e.target.value)}
-              />
+              <textarea value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} />
             </label>
-            <button className="btn">Generate Rizz!</button>
+            <button className='btn'>Generate Rizz!</button>
           </form>
         </div>
       </div>
-      
+
       {modalPrompt && (
         <Modal closeModal={closeModal}>
           <form
