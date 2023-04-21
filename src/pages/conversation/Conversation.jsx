@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
 // firestore
-import { Timestamp, collection, doc, getDoc, setDoc, setIndexConfiguration } from '@firebase/firestore';
+import { Timestamp, collection, doc, getDoc, setDoc } from '@firebase/firestore';
 import { db } from '../../firebase/init';
 import { useSubdocument } from '../../hooks/useSubdocument';
 
@@ -48,13 +48,7 @@ export default function Conversation() {
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messageHistory, setMessageHistory] = useState([]);
   const [userPrompt, setUserPrompt] = useState('');
-  const [chatCompletions, setChatCompletions] = useState([
-    'same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?',
-    'same tbh, been trying to find some good netflix shows to watch. got any recommendations?',
-    'same tbh. wyd on here just lookin for fun or are you tryna find something more serious?',
-    'sameee, just been chillin at home. what kind of music are you into?',
-    'same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?',
-  ]);
+  const [chatCompletions, setChatCompletions] = useState([]);
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
   const [copyIconSrcs, setCopyIconSrcs] = useState([])
 
@@ -81,7 +75,7 @@ export default function Conversation() {
     setCopyIconSrcs(chatCompletions.map(() => clipboardIcon))
   }, [chatCompletions])
 
-  async function handleNewMessage(e) {
+  async function addMessageToFirestore(e) {
     e.preventDefault();
     try {
       const messageType = modalPrompt === 'Add Her Message' ? 'RECEIVED' : 'SENT';
@@ -91,7 +85,6 @@ export default function Conversation() {
         timestamp: Timestamp.now(),
       };
 
-      // add message to firestore
       const conversationRef = doc(conversationsRef, conversationID);
       const conversationSnap = await getDoc(conversationRef);
       if (!conversationSnap.exists()) throw new Error('Invalid document ID');
@@ -108,7 +101,6 @@ export default function Conversation() {
   }
 
   async function handleMessageGeneration(e) {
-    e.preventDefault();
     if (!messageHistory.length) return;
     setLoadingChatCompletions(true);
 
@@ -190,18 +182,12 @@ export default function Conversation() {
         </div>
 
         <div className='generate-message'>
-          <form onSubmit={handleMessageGeneration}>
-            <label>
-              <span>Prompt:</span>
-              <textarea value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} />
-            </label>
-            <button className='btn'>Generate Rizz!</button>
-          </form>
+          <button className='btn generate-rizz-btn' onClick={handleMessageGeneration}>Generate Rizz!</button>
           {loadingChatCompletions && (
             <div className='completions'>
               <h2 className='header'>Loading Rizz. . .</h2>
               <div className='dfa'>
-                <div class='loading-ring'>
+                <div className='loading-ring'>
                   <div></div>
                   <div></div>
                   <div></div>
@@ -234,7 +220,7 @@ export default function Conversation() {
       {modalPrompt && (
         <Modal closeModal={closeModal}>
           <form
-            onSubmit={handleNewMessage}
+            onSubmit={addMessageToFirestore}
             className={`new-message-form ${
               modalPrompt === 'Add Her Message' ? 'received' : 'sent'
             }`}

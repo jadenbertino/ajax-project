@@ -162,8 +162,9 @@
   flex-direction: column;
 }
 
-.generate-message form button {
-  margin-top: 16px;
+.generate-message .generate-rizz-btn {
+  width: 100%;
+  font-size: 18px;
 }
 
 /* 
