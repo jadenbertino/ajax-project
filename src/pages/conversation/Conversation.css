@@ -166,6 +166,29 @@
   margin-top: 16px;
 }
 
+/* 
+
+    COMPLETIONS
+
+*/
+
+.completions {
+  margin-top: 20px;
+}
+
+.completions .header {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.completions ul {
+  padding-left: 20px;
+}
+
+.completions li {
+  margin-top: 20px;
+}
+
 @media screen and (max-width: 576px) {
   .view-conversation {
     grid-template-rows: 120px 1fr 1fr;

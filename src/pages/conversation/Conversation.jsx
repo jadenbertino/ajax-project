@@ -1,4 +1,3 @@
-import { Configuration, OpenAIApi } from 'openai';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
@@ -15,12 +14,23 @@ import RenderMessages from './RenderMessages';
 // styles
 import './Conversation.css';
 
-// openai
 const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
-const configuration = new Configuration({
-  apiKey: OPEN_AI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+
+async function getChatCompletion(params = {}) {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + String(OPEN_AI_API_KEY)
+    },
+    body: JSON.stringify(params)
+  };
+  const response = await fetch('https://api.openai.com/v1/chat/completions', requestOptions);
+  const data = await response.json();
+  // const tokensUsed = data.usage.total_tokens
+  const messageOptions = data.choices.map(messageObj => messageObj.message.content)
+  return messageOptions
+}
 
 export default function Conversation() {
   const { user } = useAuthContext();
@@ -36,7 +46,8 @@ export default function Conversation() {
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messageHistory, setMessageHistory] = useState([]);
   const [userPrompt, setUserPrompt] = useState('');
-  const [generatedMessages, setGeneratedMessages] = useState([]);
+  const [chatCompletions, setChatCompletions] = useState([]);
+  const [loadingChatCompletions, setLoadingChatCompletions] = useState(false)
 
   useEffect(() => {
     if (!user) {
@@ -86,26 +97,30 @@ export default function Conversation() {
   async function handleMessageGeneration(e) {
     e.preventDefault();
     if (!messageHistory.length) return;
+    setLoadingChatCompletions(true)
 
     const messages = messageHistory.map((message) => ({
-      type: message.type === 'RECEIVED' ? 'user' : 'system',
+      role: message.type === 'RECEIVED' ? 'user' : 'system',
       content: message.content,
     }));
     const firstMessage = `Let's play a game. Pretend that I am a 20 year old girl and you are a 20 year old boy. We are flirting on Tinder.
     Each of your messages should do one or more of the following: 1) get to know me better 2) share info about things we have in common
     Here are your rules: 1) keep your messages similar in length to mine 2) use lowercase words and chatspeak 3) no emojis 4) one question max per response
     Let's begin, here's my first message: ${messages[0].content}`;
-    messages[0] = firstMessage
+    messages[0].content = firstMessage
 
     try {
-      const chatCompletions = await openai.createChatCompletion({
+      const PARAMS = {
         model: "gpt-3.5-turbo",
         messages,
         n: 5,
-      })
-      console.log(chatCompletions)
+      }
+      const chatCompletions = await getChatCompletion(PARAMS)
+      setChatCompletions(chatCompletions)
+      setLoadingChatCompletions(false)
     } catch (err) {
       console.log(err.message)
+      setLoadingChatCompletions(false)
     }
   }
 
@@ -147,7 +162,21 @@ export default function Conversation() {
             </label>
             <button className='btn'>Generate Rizz!</button>
           </form>
+          <div className="completions">
+            {loadingChatCompletions && <h2 className='header'>Loading Rizz. . .</h2>}
+            {loadingChatCompletions && <img />}
+            {chatCompletions.length ? <h2 className='header'>Rizz Generated!</h2> : null}
+            {chatCompletions.length ? (
+              <ul>
+                {chatCompletions.map((message, i) => (
+                  <li key={i}>{message}</li>
+                  ))}
+              </ul>
+            ) : null}
+          </div>
+
         </div>
+
       </div>
 
       {modalPrompt && (
@@ -177,3 +206,75 @@ export default function Conversation() {
     </>
   );
 }
+
+
+/*
+example messages
+
+    "same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?",
+    "same tbh, been trying to find some good netflix shows to watch. got any recommendations?",
+    "same tbh. wyd on here just lookin for fun or are you tryna find something more serious?",
+    "sameee, just been chillin at home. what kind of music are you into?",
+    "same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?",
+
+
+
+
+response object:
+data.usage.total_tokens
+data.choices.map(messageObj => messageObj.message.content)
+{
+    "id": "chatcmpl-77cYUvhCo9oaed052pLSQDTSH7eOh",
+    "object": "chat.completion",
+    "created": 1682050858,
+    "model": "gpt-3.5-turbo-0301",
+    "usage": {
+        "prompt_tokens": 156,
+        "completion_tokens": 82,
+        "total_tokens": 238
+    },
+    "choices": [
+        {
+            "message": {
+                "role": "assistant",
+                "content": "same haha, what do you like to do for fun?"
+            },
+            "finish_reason": "stop",
+            "index": 0
+        },
+        {
+            "message": {
+                "role": "assistant",
+                "content": "same here, just trying to find someone interesting to talk to on here. what are you studying in college?"
+            },
+            "finish_reason": "stop",
+            "index": 1
+        },
+        {
+            "message": {
+                "role": "assistant",
+                "content": "same here, just been loungin' around all day. what do you like to do for fun?"
+            },
+            "finish_reason": "stop",
+            "index": 2
+        },
+        {
+            "message": {
+                "role": "assistant",
+                "content": "same tbh lol, wut do u like to do for fun?"
+            },
+            "finish_reason": "stop",
+            "index": 3
+        },
+        {
+            "message": {
+                "role": "assistant",
+                "content": "same here lol. what do you usually do for fun?"
+            },
+            "finish_reason": "stop",
+            "index": 4
+        }
+    ]
+}
+
+*/
