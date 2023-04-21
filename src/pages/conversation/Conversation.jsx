@@ -141,7 +141,6 @@ export default function Conversation() {
             <i className='fa-solid fa-house'></i>
           </Link>
         </nav>
-
         <div className='conversation-history'>
           <RenderMessages messages={messageHistory} />
           <div className='new-message-btns'>
@@ -164,7 +163,9 @@ export default function Conversation() {
           </form>
           <div className="completions">
             {loadingChatCompletions && <h2 className='header'>Loading Rizz. . .</h2>}
-            {loadingChatCompletions && <img />}
+            {loadingChatCompletions && <div className="dfa">
+              <div class="loading-ring"><div></div><div></div><div></div><div></div></div>
+            </div>}
             {chatCompletions.length ? <h2 className='header'>Rizz Generated!</h2> : null}
             {chatCompletions.length ? (
               <ul>
