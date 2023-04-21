@@ -13,6 +13,9 @@ import RenderMessages from './RenderMessages';
 
 // styles
 import './Conversation.css';
+import './LoadingRing.css';
+import clipboardIcon from './clipboardIcon.png';
+import checkmarkIcon from './checkmarkIcon.png'
 
 const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
 
@@ -21,15 +24,14 @@ async function getChatCompletion(params = {}) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + String(OPEN_AI_API_KEY)
+      Authorization: 'Bearer ' + String(OPEN_AI_API_KEY),
     },
-    body: JSON.stringify(params)
+    body: JSON.stringify(params),
   };
   const response = await fetch('https://api.openai.com/v1/chat/completions', requestOptions);
   const data = await response.json();
-  // const tokensUsed = data.usage.total_tokens
-  const messageOptions = data.choices.map(messageObj => messageObj.message.content)
-  return messageOptions
+  const messageOptions = data.choices.map((messageObj) => messageObj.message.content);
+  return messageOptions;
 }
 
 export default function Conversation() {
@@ -46,8 +48,15 @@ export default function Conversation() {
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messageHistory, setMessageHistory] = useState([]);
   const [userPrompt, setUserPrompt] = useState('');
-  const [chatCompletions, setChatCompletions] = useState([]);
-  const [loadingChatCompletions, setLoadingChatCompletions] = useState(false)
+  const [chatCompletions, setChatCompletions] = useState([
+    'same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?',
+    'same tbh, been trying to find some good netflix shows to watch. got any recommendations?',
+    'same tbh. wyd on here just lookin for fun or are you tryna find something more serious?',
+    'sameee, just been chillin at home. what kind of music are you into?',
+    'same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?',
+  ]);
+  const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
+  const [copyIconSrc, setCopyIconSrc] = useState(clipboardIcon)
 
   useEffect(() => {
     if (!user) {
@@ -97,7 +106,7 @@ export default function Conversation() {
   async function handleMessageGeneration(e) {
     e.preventDefault();
     if (!messageHistory.length) return;
-    setLoadingChatCompletions(true)
+    setLoadingChatCompletions(true);
 
     const messages = messageHistory.map((message) => ({
       role: message.type === 'RECEIVED' ? 'user' : 'system',
@@ -107,26 +116,35 @@ export default function Conversation() {
     Each of your messages should do one or more of the following: 1) get to know me better 2) share info about things we have in common
     Here are your rules: 1) keep your messages similar in length to mine 2) use lowercase words and chatspeak 3) no emojis 4) one question max per response
     Let's begin, here's my first message: ${messages[0].content}`;
-    messages[0].content = firstMessage
+    messages[0].content = firstMessage;
 
     try {
       const PARAMS = {
-        model: "gpt-3.5-turbo",
+        model: 'gpt-3.5-turbo',
         messages,
         n: 5,
-      }
-      const chatCompletions = await getChatCompletion(PARAMS)
-      setChatCompletions(chatCompletions)
-      setLoadingChatCompletions(false)
+      };
+      const chatCompletions = await getChatCompletion(PARAMS);
+      setChatCompletions(chatCompletions);
+      setLoadingChatCompletions(false);
     } catch (err) {
-      console.log(err.message)
-      setLoadingChatCompletions(false)
+      console.log(err.message);
+      setLoadingChatCompletions(false);
     }
   }
 
   function closeModal() {
     setNewMessageText('');
     setModalPrompt(null);
+  }
+
+  function handleCopy(e) {
+    e.preventDefault();
+
+    const textToCopy = e.target.nextElementSibling.textContent;
+    navigator.clipboard.writeText(textToCopy);
+    setCopyIconSrc(checkmarkIcon)
+    setTimeout(() => setCopyIconSrc(clipboardIcon), 1000)
   }
 
   return (
@@ -161,23 +179,38 @@ export default function Conversation() {
             </label>
             <button className='btn'>Generate Rizz!</button>
           </form>
-          <div className="completions">
-            {loadingChatCompletions && <h2 className='header'>Loading Rizz. . .</h2>}
-            {loadingChatCompletions && <div className="dfa">
-              <div class="loading-ring"><div></div><div></div><div></div><div></div></div>
-            </div>}
-            {chatCompletions.length ? <h2 className='header'>Rizz Generated!</h2> : null}
-            {chatCompletions.length ? (
+          {loadingChatCompletions && (
+            <div className='completions'>
+              <h2 className='header'>Loading Rizz. . .</h2>
+              <div className='dfa'>
+                <div class='loading-ring'>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+          )}
+          {chatCompletions.length ? (
+            <div className='completions'>
+              <h2 className='header'>Rizz Generated!</h2>
               <ul>
                 {chatCompletions.map((message, i) => (
-                  <li key={i}>{message}</li>
-                  ))}
+                  <li key={i}>
+                    <img
+                      src={copyIconSrc}
+                      className='clipboard-icon'
+                      onClick={handleCopy}
+                      alt=''
+                    />
+                    <p>{message}</p>
+                  </li>
+                ))}
               </ul>
-            ) : null}
-          </div>
-
+            </div>
+          ) : null}
         </div>
-
       </div>
 
       {modalPrompt && (
@@ -208,15 +241,16 @@ export default function Conversation() {
   );
 }
 
-
 /*
 example messages
-
+  [
     "same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?",
     "same tbh, been trying to find some good netflix shows to watch. got any recommendations?",
     "same tbh. wyd on here just lookin for fun or are you tryna find something more serious?",
     "sameee, just been chillin at home. what kind of music are you into?",
     "same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?",
+  ]
+  
 
 
 
