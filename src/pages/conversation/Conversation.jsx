@@ -169,52 +169,54 @@ export default function Conversation() {
             <i className='fa-solid fa-house'></i>
           </Link>
         </nav>
-        <div className='conversation-history'>
-          <RenderMessages messages={messageHistory} />
-          <div className='new-message-btns'>
-            <button className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
-              Add Her Message
-            </button>
-            <button className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
-              Add Your Message
-            </button>
+        <main>
+          <div className='conversation-history'>
+            <RenderMessages messages={messageHistory} />
+            <div className='new-message-btns'>
+              <button className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
+                Add Her Message
+              </button>
+              <button className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
+                Add Your Message
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className='generate-message'>
-          <button className='btn generate-rizz-btn' onClick={handleMessageGeneration}>Generate Rizz!</button>
-          {loadingChatCompletions && (
-            <div className='completions'>
-              <h2 className='header'>Loading Rizz. . .</h2>
-              <div className='dfa'>
-                <div className='loading-ring'>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
+          <div className='generate-message'>
+            <button className='btn generate-rizz-btn' onClick={handleMessageGeneration}>Generate Rizz!</button>
+            {loadingChatCompletions && (
+              <div className='completions'>
+                <h2 className='header'>Loading Rizz. . .</h2>
+                <div className='dfa'>
+                  <div className='loading-ring'>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-          {chatCompletions.length && chatCompletions.length === copyIconSrcs.length ? (
-            <div className='completions'>
-              <h2 className='header'>Rizz Generated!</h2>
-              <ul>
-                {chatCompletions.map((message, index) => (
-                  <li key={index}>
-                    <img
-                      src={copyIconSrcs[index]}
-                      className='clipboard-icon'
-                      onClick={(e) => handleCopy(e, index)}
-                      alt=''
-                    />
-                    <p>{message}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </div>
+            )}
+            {chatCompletions.length && chatCompletions.length === copyIconSrcs.length ? (
+              <div className='completions'>
+                <h2 className='header'>Rizz Generated!</h2>
+                <ul>
+                  {chatCompletions.map((message, index) => (
+                    <li key={index}>
+                      <img
+                        src={copyIconSrcs[index]}
+                        className='clipboard-icon'
+                        onClick={(e) => handleCopy(e, index)}
+                        alt=''
+                      />
+                      <p>{message}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        </main>
       </div>
 
       {modalPrompt && (
@@ -255,65 +257,7 @@ example messages
     "same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?",
   ]
   
-
-
-
-
-response object:
+data = response object
 data.usage.total_tokens
 data.choices.map(messageObj => messageObj.message.content)
-{
-    "id": "chatcmpl-77cYUvhCo9oaed052pLSQDTSH7eOh",
-    "object": "chat.completion",
-    "created": 1682050858,
-    "model": "gpt-3.5-turbo-0301",
-    "usage": {
-        "prompt_tokens": 156,
-        "completion_tokens": 82,
-        "total_tokens": 238
-    },
-    "choices": [
-        {
-            "message": {
-                "role": "assistant",
-                "content": "same haha, what do you like to do for fun?"
-            },
-            "finish_reason": "stop",
-            "index": 0
-        },
-        {
-            "message": {
-                "role": "assistant",
-                "content": "same here, just trying to find someone interesting to talk to on here. what are you studying in college?"
-            },
-            "finish_reason": "stop",
-            "index": 1
-        },
-        {
-            "message": {
-                "role": "assistant",
-                "content": "same here, just been loungin' around all day. what do you like to do for fun?"
-            },
-            "finish_reason": "stop",
-            "index": 2
-        },
-        {
-            "message": {
-                "role": "assistant",
-                "content": "same tbh lol, wut do u like to do for fun?"
-            },
-            "finish_reason": "stop",
-            "index": 3
-        },
-        {
-            "message": {
-                "role": "assistant",
-                "content": "same here lol. what do you usually do for fun?"
-            },
-            "finish_reason": "stop",
-            "index": 4
-        }
-    ]
-}
-
 */
