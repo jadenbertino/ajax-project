@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
 // firestore
-import { Timestamp, collection, doc, getDoc, setDoc } from '@firebase/firestore';
+import { Timestamp, collection, doc, getDoc, setDoc, setIndexConfiguration } from '@firebase/firestore';
 import { db } from '../../firebase/init';
 import { useSubdocument } from '../../hooks/useSubdocument';
 
@@ -56,7 +56,7 @@ export default function Conversation() {
     'same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?',
   ]);
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
-  const [copyIconSrc, setCopyIconSrc] = useState(clipboardIcon)
+  const [copyIconSrcs, setCopyIconSrcs] = useState([])
 
   useEffect(() => {
     if (!user) {
@@ -76,6 +76,10 @@ export default function Conversation() {
     setConversationName(name);
     setMessageHistory(messages);
   }, [conversationDoc]);
+
+  useEffect(() => {
+    setCopyIconSrcs(chatCompletions.map(() => clipboardIcon))
+  }, [chatCompletions])
 
   async function handleNewMessage(e) {
     e.preventDefault();
@@ -138,13 +142,27 @@ export default function Conversation() {
     setModalPrompt(null);
   }
 
-  function handleCopy(e) {
+  function handleCopy(e, index) {
     e.preventDefault();
 
     const textToCopy = e.target.nextElementSibling.textContent;
     navigator.clipboard.writeText(textToCopy);
-    setCopyIconSrc(checkmarkIcon)
-    setTimeout(() => setCopyIconSrc(clipboardIcon), 1000)
+    setIconToCheckmarkForOneSecond(index)
+  }
+
+  function setIconToCheckmarkForOneSecond(index) {
+    setCopyIconSrcs((prevSrcs) => {
+      const newSrcs = [...prevSrcs];
+      newSrcs[index] = checkmarkIcon;
+      return newSrcs;
+    });
+    setTimeout(() => {
+      setCopyIconSrcs((prevSrcs) => {
+        const newSrcs = [...prevSrcs];
+        newSrcs[index] = clipboardIcon;
+        return newSrcs;
+      });
+    }, 1000);
   }
 
   return (
@@ -192,16 +210,16 @@ export default function Conversation() {
               </div>
             </div>
           )}
-          {chatCompletions.length ? (
+          {chatCompletions.length && chatCompletions.length === copyIconSrcs.length ? (
             <div className='completions'>
               <h2 className='header'>Rizz Generated!</h2>
               <ul>
-                {chatCompletions.map((message, i) => (
-                  <li key={i}>
+                {chatCompletions.map((message, index) => (
+                  <li key={index}>
                     <img
-                      src={copyIconSrc}
+                      src={copyIconSrcs[index]}
                       className='clipboard-icon'
-                      onClick={handleCopy}
+                      onClick={(e) => handleCopy(e, index)}
                       alt=''
                     />
                     <p>{message}</p>
