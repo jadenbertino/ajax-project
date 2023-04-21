@@ -10,14 +10,26 @@ import { useSubdocument } from '../../hooks/useSubdocument';
 // components
 import Modal from '../../components/Modal';
 import RenderMessages from './RenderMessages';
+import RenderChatCompletions from './RenderChatCompletions';
 
 // styles
 import './Conversation.css';
-import './LoadingRing.css';
-import clipboardIcon from './clipboardIcon.png';
-import checkmarkIcon from './checkmarkIcon.png'
 
 const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
+
+const EXAMPLE_MESSAGES =   [
+  "same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?",
+  "same tbh, been trying to find some good netflix shows to watch. got any recommendations?",
+  "same tbh. wyd on here just lookin for fun or are you tryna find something more serious?",
+  "sameee, just been chillin at home. what kind of music are you into?",
+  "same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?",
+]
+
+/*
+  data = response object
+  data.usage.total_tokens
+  data.choices.map(messageObj => messageObj.message.content)
+*/
 
 async function getChatCompletion(params = {}) {
   const requestOptions = {
@@ -39,6 +51,8 @@ export default function Conversation() {
   const nav = useNavigate();
   const [modalPrompt, setModalPrompt] = useState(null);
   const [newMessageText, setNewMessageText] = useState('');
+  const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
+  const [chatCompletions, setChatCompletions] = useState([]);
 
   // fetch conversation
   const { conversationID } = useParams();
@@ -47,10 +61,7 @@ export default function Conversation() {
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messageHistory, setMessageHistory] = useState([]);
-  const [userPrompt, setUserPrompt] = useState('');
-  const [chatCompletions, setChatCompletions] = useState([]);
-  const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
-  const [copyIconSrcs, setCopyIconSrcs] = useState([])
+
 
   useEffect(() => {
     if (!user) {
@@ -70,10 +81,6 @@ export default function Conversation() {
     setConversationName(name);
     setMessageHistory(messages);
   }, [conversationDoc]);
-
-  useEffect(() => {
-    setCopyIconSrcs(chatCompletions.map(() => clipboardIcon))
-  }, [chatCompletions])
 
   async function addMessageToFirestore(e) {
     e.preventDefault();
@@ -100,7 +107,7 @@ export default function Conversation() {
     }
   }
 
-  async function handleMessageGeneration(e) {
+  async function handleMessageGeneration() {
     if (!messageHistory.length) return;
     setLoadingChatCompletions(true);
 
@@ -133,30 +140,7 @@ export default function Conversation() {
     setNewMessageText('');
     setModalPrompt(null);
   }
-
-  function handleCopy(e, index) {
-    e.preventDefault();
-
-    const textToCopy = e.target.nextElementSibling.textContent;
-    navigator.clipboard.writeText(textToCopy);
-    setIconToCheckmarkForOneSecond(index)
-  }
-
-  function setIconToCheckmarkForOneSecond(index) {
-    setCopyIconSrcs((prevSrcs) => {
-      const newSrcs = [...prevSrcs];
-      newSrcs[index] = checkmarkIcon;
-      return newSrcs;
-    });
-    setTimeout(() => {
-      setCopyIconSrcs((prevSrcs) => {
-        const newSrcs = [...prevSrcs];
-        newSrcs[index] = clipboardIcon;
-        return newSrcs;
-      });
-    }, 1000);
-  }
-
+  
   return (
     <>
       <div className='view-conversation container'>
@@ -183,37 +167,11 @@ export default function Conversation() {
           </div>
 
           <div className='generate-message'>
-            <button className='btn generate-rizz-btn' onClick={handleMessageGeneration}>Generate Rizz!</button>
-            {loadingChatCompletions && (
-              <div className='completions'>
-                <h2 className='header'>Loading Rizz. . .</h2>
-                <div className='dfa'>
-                  <div className='loading-ring'>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                </div>
-              </div>
-            )}
-            {chatCompletions.length && chatCompletions.length === copyIconSrcs.length ? (
-              <div className='completions'>
-                <h2 className='header'>Rizz Generated!</h2>
-                <ul>
-                  {chatCompletions.map((message, index) => (
-                    <li key={index}>
-                      <img
-                        src={copyIconSrcs[index]}
-                        className='clipboard-icon'
-                        onClick={(e) => handleCopy(e, index)}
-                        alt=''
-                      />
-                      <p>{message}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <button className='btn generate-rizz-btn' onClick={handleMessageGeneration}>
+              Generate Rizz!
+            </button>
+            {(loadingChatCompletions || chatCompletions.length) ? (
+              <RenderChatCompletions chatCompletions={chatCompletions} />
             ) : null}
           </div>
         </main>
@@ -246,18 +204,3 @@ export default function Conversation() {
     </>
   );
 }
-
-/*
-example messages
-  [
-    "same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?",
-    "same tbh, been trying to find some good netflix shows to watch. got any recommendations?",
-    "same tbh. wyd on here just lookin for fun or are you tryna find something more serious?",
-    "sameee, just been chillin at home. what kind of music are you into?",
-    "same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?",
-  ]
-  
-data = response object
-data.usage.total_tokens
-data.choices.map(messageObj => messageObj.message.content)
-*/
