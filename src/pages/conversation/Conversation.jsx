@@ -50,13 +50,12 @@ async function getChatCompletion(params = {}) {
 export default function Conversation() {
   const { user } = useAuthContext();
   const nav = useNavigate();
-  const [modalPrompt, setModalPrompt] = useState(null);
   const [newMessageText, setNewMessageText] = useState('');
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
   // const [chatCompletions, setChatCompletions] = useState([]);
   const [chatCompletions, setChatCompletions] = useState(EXAMPLE_MESSAGES);
-  const [chatCompletionsModalActive, setChatCompletionsModalActive] = useState(false);
   const { width: windowWidth } = useWindowSize();
+  const [modalActive, setModalActive] = useState('');
 
   // fetch conversation
   const { conversationID } = useParams();
@@ -85,10 +84,14 @@ export default function Conversation() {
     setMessageHistory(messages);
   }, [conversationDoc]);
 
+  function closeModal() {
+    setModalActive('');
+  }
+
   async function addMessageToFirestore(e) {
     e.preventDefault();
     try {
-      const messageType = modalPrompt === 'Add Her Message' ? 'RECEIVED' : 'SENT';
+      const messageType = modalActive === 'ADD_RECEIVED_MESSAGE' ? 'RECEIVED' : 'SENT';
       const message = {
         type: messageType,
         content: newMessageText,
@@ -106,6 +109,7 @@ export default function Conversation() {
       closeModal();
     } catch (err) {
       console.log(err.message);
+      setNewMessageText('');
       closeModal();
     }
   }
@@ -118,7 +122,7 @@ export default function Conversation() {
     if (!messageHistory.length) return;
     setChatCompletions([]);
     setLoadingChatCompletions(true);
-    if (isMobileScreenSize()) setChatCompletionsModalActive(true);
+    if (isMobileScreenSize()) setModalActive('CHAT_COMPLETIONS');
 
     const messages = messageHistory.map((message) => ({
       role: message.type === 'RECEIVED' ? 'user' : 'system',
@@ -145,15 +149,6 @@ export default function Conversation() {
     }
   }
 
-  function closeModal() {
-    setNewMessageText('');
-    setModalPrompt(null);
-  }
-
-  function closeChatCompletionsModal() {
-    setChatCompletionsModalActive(false)
-  }
-
   return (
     <>
       <div className='view-conversation container'>
@@ -170,10 +165,13 @@ export default function Conversation() {
           <div className='conversation-history'>
             <RenderMessages messages={messageHistory} />
             <div className='new-message-btns'>
-              <button className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
+              <button
+                className='btn received'
+                onClick={() => setModalActive('ADD_RECEIVED_MESSAGE')}
+              >
                 Add Her Message
               </button>
-              <button className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
+              <button className='btn sent' onClick={() => setModalActive('ADD_SENT_MESSAGE')}>
                 Add Your Message
               </button>
             </div>
@@ -182,7 +180,7 @@ export default function Conversation() {
           <div className='generate-message'>
             <div className='view-or-generate-btns'>
               {isMobileScreenSize() && (loadingChatCompletions || chatCompletions.length) ? (
-                <button className='btn' onClick={() => setChatCompletionsModalActive(true)}>
+                <button className='btn' onClick={() => setModalActive('CHAT_COMPLETIONS')}>
                   View Rizz
                 </button>
               ) : null}
@@ -190,28 +188,29 @@ export default function Conversation() {
                 Generate Rizz!
               </button>
             </div>
-            {loadingChatCompletions || chatCompletions.length ? 
+            {loadingChatCompletions || chatCompletions.length ? (
               !isMobileScreenSize() ? (
                 <RenderChatCompletions chatCompletions={chatCompletions} />
-              ) : chatCompletionsModalActive ? (
-                <Modal closeModal={closeChatCompletionsModal}>
-                  <i className="fa-solid fa-x close-modal-icon" onClick={closeChatCompletionsModal}></i>
+              ) : modalActive === 'CHAT_COMPLETIONS' ? (
+                <Modal closeModal={closeModal}>
+                  <i className='fa-solid fa-x close-modal-icon' onClick={closeModal}></i>
                   <RenderChatCompletions chatCompletions={chatCompletions} />
                 </Modal>
-              ) : null : null}
+              ) : null
+            ) : null}
           </div>
         </main>
       </div>
 
-      {modalPrompt && (
+      {(modalActive === 'ADD_SENT_MESSAGE' || modalActive === 'ADD_RECEIVED_MESSAGE') && (
         <Modal closeModal={closeModal}>
           <form
             onSubmit={addMessageToFirestore}
             className={`new-message-form ${
-              modalPrompt === 'Add Her Message' ? 'received' : 'sent'
+              modalActive === 'ADD_RECEIVED_MESSAGE' ? 'received' : 'sent'
             }`}
           >
-            <h2>{modalPrompt}</h2>
+            <h2>{modalActive === 'ADD_RECEIVED_MESSAGE' ? 'Add Her Message' : 'Add Your Message'}</h2>
             <textarea
               onChange={(e) => setNewMessageText(e.target.value)}
               value={newMessageText}
