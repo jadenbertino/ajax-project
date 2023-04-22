@@ -175,16 +175,16 @@
   flex-direction: column;
 }
 
-.generate-message .generate-rizz-btn {
-  width: 100%;
-  font-size: 18px;
+.view-or-generate-btns {
+  display: flex;
+  margin: 0 -12px;
 }
 
-/* 
-
-    COMPLETIONS
-
-*/
+.view-or-generate-btns > * {
+  width: 100%;
+  font-size: 18px;
+  margin: 0 12px;
+}
 
 .completions {
   margin-top: 20px;
@@ -197,6 +197,10 @@
 
 .completions ul {
   padding-left: 20px;
+}
+
+.modal .completions ul {
+  padding-left: 0;
 }
 
 .completions li {

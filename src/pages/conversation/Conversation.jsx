@@ -9,21 +9,22 @@ import { useSubdocument } from '../../hooks/useSubdocument';
 
 // components
 import Modal from '../../components/Modal';
-import RenderMessages from './RenderMessages';
+import { useWindowSize } from '../../hooks/useWindowSize';
 import RenderChatCompletions from './RenderChatCompletions';
+import RenderMessages from './RenderMessages';
 
 // styles
 import './Conversation.css';
 
 const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
 
-const EXAMPLE_MESSAGES =   [
-  "same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?",
-  "same tbh, been trying to find some good netflix shows to watch. got any recommendations?",
-  "same tbh. wyd on here just lookin for fun or are you tryna find something more serious?",
-  "sameee, just been chillin at home. what kind of music are you into?",
-  "same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?",
-]
+const EXAMPLE_MESSAGES = [
+  'same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?',
+  'same tbh, been trying to find some good netflix shows to watch. got any recommendations?',
+  'same tbh. wyd on here just lookin for fun or are you tryna find something more serious?',
+  'sameee, just been chillin at home. what kind of music are you into?',
+  'same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?',
+];
 
 /*
   data = response object
@@ -52,7 +53,10 @@ export default function Conversation() {
   const [modalPrompt, setModalPrompt] = useState(null);
   const [newMessageText, setNewMessageText] = useState('');
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
-  const [chatCompletions, setChatCompletions] = useState([]);
+  // const [chatCompletions, setChatCompletions] = useState([]);
+  const [chatCompletions, setChatCompletions] = useState(EXAMPLE_MESSAGES);
+  const [chatCompletionsModalActive, setChatCompletionsModalActive] = useState(false);
+  const { width: windowWidth } = useWindowSize();
 
   // fetch conversation
   const { conversationID } = useParams();
@@ -61,7 +65,6 @@ export default function Conversation() {
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messageHistory, setMessageHistory] = useState([]);
-
 
   useEffect(() => {
     if (!user) {
@@ -107,9 +110,15 @@ export default function Conversation() {
     }
   }
 
-  async function handleMessageGeneration() {
+  function isMobileScreenSize() {
+    return windowWidth <= 768;
+  }
+
+  async function generateFiveNewMessages() {
     if (!messageHistory.length) return;
+    setChatCompletions([]);
     setLoadingChatCompletions(true);
+    if (isMobileScreenSize()) setChatCompletionsModalActive(true);
 
     const messages = messageHistory.map((message) => ({
       role: message.type === 'RECEIVED' ? 'user' : 'system',
@@ -140,7 +149,11 @@ export default function Conversation() {
     setNewMessageText('');
     setModalPrompt(null);
   }
-  
+
+  function closeChatCompletionsModal() {
+    setChatCompletionsModalActive(false)
+  }
+
   return (
     <>
       <div className='view-conversation container'>
@@ -167,12 +180,25 @@ export default function Conversation() {
           </div>
 
           <div className='generate-message'>
-            <button className='btn generate-rizz-btn' onClick={handleMessageGeneration}>
-              Generate Rizz!
-            </button>
-            {(loadingChatCompletions || chatCompletions.length) ? (
-              <RenderChatCompletions chatCompletions={chatCompletions} />
-            ) : null}
+            <div className='view-or-generate-btns'>
+              {isMobileScreenSize() && (loadingChatCompletions || chatCompletions.length) ? (
+                <button className='btn' onClick={() => setChatCompletionsModalActive(true)}>
+                  View Rizz
+                </button>
+              ) : null}
+              <button className='btn generate-rizz-btn' onClick={generateFiveNewMessages}>
+                Generate Rizz!
+              </button>
+            </div>
+            {loadingChatCompletions || chatCompletions.length ? 
+              !isMobileScreenSize() ? (
+                <RenderChatCompletions chatCompletions={chatCompletions} />
+              ) : chatCompletionsModalActive ? (
+                <Modal closeModal={closeChatCompletionsModal}>
+                  <i className="fa-solid fa-x close-modal-icon" onClick={closeChatCompletionsModal}></i>
+                  <RenderChatCompletions chatCompletions={chatCompletions} />
+                </Modal>
+              ) : null : null}
           </div>
         </main>
       </div>
