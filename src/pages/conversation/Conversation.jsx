@@ -12,6 +12,7 @@ import Modal from '../../components/Modal';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import RenderChatCompletions from './RenderChatCompletions';
 import RenderMessages from './RenderMessages';
+import AddNewMessageModal from './AddNewMessageModal';
 
 // styles
 import './Conversation.css';
@@ -26,12 +27,6 @@ const EXAMPLE_MESSAGES = [
   'same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?',
 ];
 
-/*
-  data = response object
-  data.usage.total_tokens
-  data.choices.map(messageObj => messageObj.message.content)
-*/
-
 async function getChatCompletion(params = {}) {
   const requestOptions = {
     method: 'POST',
@@ -43,25 +38,24 @@ async function getChatCompletion(params = {}) {
   };
   const response = await fetch('https://api.openai.com/v1/chat/completions', requestOptions);
   const data = await response.json();
-  const messageOptions = data.choices.map((messageObj) => messageObj.message.content);
-  return messageOptions;
+  const messageChoices = data.choices.map((messageObj) => messageObj.message.content);
+  const tokensUsed = data.usage.total_tokens;
+  return { messageChoices, tokensUsed };
 }
 
 export default function Conversation() {
   const { user } = useAuthContext();
   const nav = useNavigate();
-  const [modalPrompt, setModalPrompt] = useState(null);
-  const [newMessageText, setNewMessageText] = useState('');
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
   // const [chatCompletions, setChatCompletions] = useState([]);
   const [chatCompletions, setChatCompletions] = useState(EXAMPLE_MESSAGES);
-  const [chatCompletionsModalActive, setChatCompletionsModalActive] = useState(false);
   const { width: windowWidth } = useWindowSize();
+  const [modalActive, setModalActive] = useState('');
 
   // fetch conversation
   const { conversationID } = useParams();
-  const [conversationsRef, setConversationsRef] = useState(null);
-  const { document: conversationDoc } = useSubdocument(conversationsRef, conversationID);
+  const [conversationRef, setConversationRef] = useState(null);
+  const { document: conversationDoc } = useSubdocument(conversationRef);
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
   const [messageHistory, setMessageHistory] = useState([]);
@@ -74,7 +68,8 @@ export default function Conversation() {
 
     const userDocRef = doc(db, 'users', user.uid);
     const conversationsRef = collection(userDocRef, 'conversations');
-    setConversationsRef(conversationsRef);
+    const conversationRef = doc(conversationsRef, conversationID);
+    setConversationRef(conversationRef)
   }, [user, nav]);
 
   useEffect(() => {
@@ -85,29 +80,8 @@ export default function Conversation() {
     setMessageHistory(messages);
   }, [conversationDoc]);
 
-  async function addMessageToFirestore(e) {
-    e.preventDefault();
-    try {
-      const messageType = modalPrompt === 'Add Her Message' ? 'RECEIVED' : 'SENT';
-      const message = {
-        type: messageType,
-        content: newMessageText,
-        timestamp: Timestamp.now(),
-      };
-
-      const conversationRef = doc(conversationsRef, conversationID);
-      const conversationSnap = await getDoc(conversationRef);
-      if (!conversationSnap.exists()) throw new Error('Invalid document ID');
-      const { messages } = conversationSnap.data();
-      messages.push(message);
-      await setDoc(conversationRef, { messages }, { merge: true });
-
-      setNewMessageText('');
-      closeModal();
-    } catch (err) {
-      console.log(err.message);
-      closeModal();
-    }
+  function closeModal() {
+    setModalActive('');
   }
 
   function isMobileScreenSize() {
@@ -118,7 +92,7 @@ export default function Conversation() {
     if (!messageHistory.length) return;
     setChatCompletions([]);
     setLoadingChatCompletions(true);
-    if (isMobileScreenSize()) setChatCompletionsModalActive(true);
+    if (isMobileScreenSize()) setModalActive('CHAT_COMPLETIONS');
 
     const messages = messageHistory.map((message) => ({
       role: message.type === 'RECEIVED' ? 'user' : 'system',
@@ -136,22 +110,13 @@ export default function Conversation() {
         messages,
         n: 5,
       };
-      const chatCompletions = await getChatCompletion(PARAMS);
+      const { messageChoices: chatCompletions } = await getChatCompletion(PARAMS);
       setChatCompletions(chatCompletions);
       setLoadingChatCompletions(false);
     } catch (err) {
       console.log(err.message);
       setLoadingChatCompletions(false);
     }
-  }
-
-  function closeModal() {
-    setNewMessageText('');
-    setModalPrompt(null);
-  }
-
-  function closeChatCompletionsModal() {
-    setChatCompletionsModalActive(false)
   }
 
   return (
@@ -170,10 +135,13 @@ export default function Conversation() {
           <div className='conversation-history'>
             <RenderMessages messages={messageHistory} />
             <div className='new-message-btns'>
-              <button className='btn received' onClick={() => setModalPrompt('Add Her Message')}>
+              <button
+                className='btn received'
+                onClick={() => setModalActive('ADD_RECEIVED_MESSAGE')}
+              >
                 Add Her Message
               </button>
-              <button className='btn sent' onClick={() => setModalPrompt('Add Your Message')}>
+              <button className='btn sent' onClick={() => setModalActive('ADD_SENT_MESSAGE')}>
                 Add Your Message
               </button>
             </div>
@@ -182,7 +150,7 @@ export default function Conversation() {
           <div className='generate-message'>
             <div className='view-or-generate-btns'>
               {isMobileScreenSize() && (loadingChatCompletions || chatCompletions.length) ? (
-                <button className='btn' onClick={() => setChatCompletionsModalActive(true)}>
+                <button className='btn' onClick={() => setModalActive('CHAT_COMPLETIONS')}>
                   View Rizz
                 </button>
               ) : null}
@@ -190,42 +158,22 @@ export default function Conversation() {
                 Generate Rizz!
               </button>
             </div>
-            {loadingChatCompletions || chatCompletions.length ? 
+            {loadingChatCompletions || chatCompletions.length ? (
               !isMobileScreenSize() ? (
                 <RenderChatCompletions chatCompletions={chatCompletions} />
-              ) : chatCompletionsModalActive ? (
-                <Modal closeModal={closeChatCompletionsModal}>
-                  <i className="fa-solid fa-x close-modal-icon" onClick={closeChatCompletionsModal}></i>
+              ) : modalActive === 'CHAT_COMPLETIONS' ? (
+                <Modal closeModal={closeModal}>
+                  <i className='fa-solid fa-x close-modal-icon' onClick={closeModal}></i>
                   <RenderChatCompletions chatCompletions={chatCompletions} />
                 </Modal>
-              ) : null : null}
+              ) : null
+            ) : null}
           </div>
         </main>
       </div>
 
-      {modalPrompt && (
-        <Modal closeModal={closeModal}>
-          <form
-            onSubmit={addMessageToFirestore}
-            className={`new-message-form ${
-              modalPrompt === 'Add Her Message' ? 'received' : 'sent'
-            }`}
-          >
-            <h2>{modalPrompt}</h2>
-            <textarea
-              onChange={(e) => setNewMessageText(e.target.value)}
-              value={newMessageText}
-              required
-              autoFocus
-            />
-            <div className='btns'>
-              <button className='btn cancel' type='button' onClick={closeModal}>
-                Cancel
-              </button>
-              <button className='btn submit'>Add New Message</button>
-            </div>
-          </form>
-        </Modal>
+      {(modalActive === 'ADD_SENT_MESSAGE' || modalActive === 'ADD_RECEIVED_MESSAGE') && (
+        <AddNewMessageModal closeModal={closeModal} modalActive={modalActive} conversationRef={conversationRef} />
       )}
     </>
   );
