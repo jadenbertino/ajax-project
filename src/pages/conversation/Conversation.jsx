@@ -8,9 +8,8 @@ import { db } from '../../firebase/init';
 import { useSubdocument } from '../../hooks/useSubdocument';
 
 // components
-import AddNewMessageModal from './AddNewMessageModal';
+import ConversationHistory from './ConversationHistory';
 import GenerateMessages from './GenerateMessages';
-import RenderMessages from './RenderMessages';
 
 // styles
 import './Conversation.css';
@@ -48,10 +47,6 @@ export default function Conversation() {
     setMessageHistory(messages);
   }, [conversationDoc]);
 
-  function closeModal() {
-    setModalActive('');
-  }
-
   return (
     <div className='view-conversation container'>
       <nav>
@@ -64,24 +59,12 @@ export default function Conversation() {
         </Link>
       </nav>
       <main>
-        <div className='conversation-history'>
-          <RenderMessages messages={messageHistory} />
-          <div className='new-message-btns'>
-            <button className='btn received' onClick={() => setModalActive('ADD_RECEIVED_MESSAGE')}>
-              Add Her Message
-            </button>
-            <button className='btn sent' onClick={() => setModalActive('ADD_SENT_MESSAGE')}>
-              Add Your Message
-            </button>
-          </div>
-          {(modalActive === 'ADD_SENT_MESSAGE' || modalActive === 'ADD_RECEIVED_MESSAGE') && (
-            <AddNewMessageModal
-              closeModal={closeModal}
-              modalActive={modalActive}
-              conversationRef={conversationRef}
-            />
-          )}
-        </div>
+        <ConversationHistory
+          messageHistory={messageHistory}
+          conversationRef={conversationRef}
+          modalActive={modalActive}
+          setModalActive={setModalActive}
+        />
         <GenerateMessages
           messageHistory={messageHistory}
           modalActive={modalActive}
