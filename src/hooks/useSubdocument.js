@@ -1,4 +1,4 @@
-import { doc, onSnapshot } from '@firebase/firestore';
+import { onSnapshot } from '@firebase/firestore';
 import { useEffect, useState } from 'react';
 
 export function useSubdocument(docRef) {
