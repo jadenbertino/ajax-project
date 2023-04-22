@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { useWindowSize } from '../../hooks/useWindowSize';
 
 // firestore
-import { Timestamp, collection, doc, getDoc, setDoc } from '@firebase/firestore';
+import { collection, doc } from '@firebase/firestore';
 import { db } from '../../firebase/init';
 import { useSubdocument } from '../../hooks/useSubdocument';
 
 // components
 import Modal from '../../components/Modal';
-import { useWindowSize } from '../../hooks/useWindowSize';
 import RenderChatCompletions from './RenderChatCompletions';
 import RenderMessages from './RenderMessages';
 import AddNewMessageModal from './AddNewMessageModal';
@@ -47,7 +47,6 @@ export default function Conversation() {
   const { user } = useAuthContext();
   const nav = useNavigate();
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
-  // const [chatCompletions, setChatCompletions] = useState([]);
   const [chatCompletions, setChatCompletions] = useState(EXAMPLE_MESSAGES);
   const { width: windowWidth } = useWindowSize();
   const [modalActive, setModalActive] = useState('');
