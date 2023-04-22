@@ -1,21 +1,13 @@
 import { useState } from 'react';
+import Modal from '../../components/Modal';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import RenderChatCompletions from './RenderChatCompletions';
-import Modal from '../../components/Modal';
 
 const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
 
-const EXAMPLE_MESSAGES = [
-  'same tbh, but im hoping that talking with u will make it more interesting :) what kind of music are u into?',
-  'same tbh, been trying to find some good netflix shows to watch. got any recommendations?',
-  'same tbh. wyd on here just lookin for fun or are you tryna find something more serious?',
-  'sameee, just been chillin at home. what kind of music are you into?',
-  'same tbh, been binge-watching netflix all day lol. what kinda shows do u like to watch?',
-];
-
 export default function GenerateMessages({ messageHistory, modalActive, setModalActive }) {
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
-  const [chatCompletions, setChatCompletions] = useState(EXAMPLE_MESSAGES);
+  const [chatCompletions, setChatCompletions] = useState([]);
   const { width: windowWidth } = useWindowSize();
 
   async function generateFiveNewMessages() {
@@ -40,8 +32,8 @@ export default function GenerateMessages({ messageHistory, modalActive, setModal
         messages,
         n: 5,
       };
-      const { messageChoices: chatCompletions } = await getChatCompletion(PARAMS);
-      setChatCompletions(chatCompletions);
+      const { messageChoices } = await getChatCompletion(PARAMS);
+      setChatCompletions(messageChoices);
       setLoadingChatCompletions(false);
     } catch (err) {
       console.log(err.message);
@@ -67,9 +59,9 @@ export default function GenerateMessages({ messageHistory, modalActive, setModal
 
   // Helper Functions
   function closeModal() {
-    setModalActive('')
+    setModalActive('');
   }
-  
+
   function isMobileScreenSize() {
     return windowWidth <= 768;
   }
@@ -91,11 +83,11 @@ export default function GenerateMessages({ messageHistory, modalActive, setModal
           <RenderChatCompletions chatCompletions={chatCompletions} />
         ) : modalActive === 'CHAT_COMPLETIONS' ? (
           <Modal closeModal={closeModal}>
-            <i className='fa-solid fa-x close-modal-icon' onClick={closeModal}></i>
             <RenderChatCompletions chatCompletions={chatCompletions} />
+            <div className="btn close-chat-completions" onClick={closeModal}>Close</div>
           </Modal>
         ) : null
       ) : null}
     </div>
-  )
+  );
 }

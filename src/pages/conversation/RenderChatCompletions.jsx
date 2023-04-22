@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import checkmarkIcon from '../../assets/checkmarkIcon.png';
 import clipboardIcon from '../../assets/clipboardIcon.png';
 

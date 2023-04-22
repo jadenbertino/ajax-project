@@ -2,7 +2,7 @@ import { Timestamp, getDoc, setDoc } from '@firebase/firestore';
 import { useState } from 'react';
 
 // components
-import Modal from "../../components/Modal";
+import Modal from '../../components/Modal';
 
 export default function AddNewMessageModal({ closeModal, modalActive, conversationRef }) {
   const [newMessageText, setNewMessageText] = useState('');

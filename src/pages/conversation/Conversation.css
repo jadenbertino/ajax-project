@@ -166,13 +166,13 @@
 
 .view-or-generate-rizz-btns {
   display: flex;
-  margin: 0 -12px;
+  margin: 0 -10px;
 }
 
 .view-or-generate-rizz-btns .btn {
   width: 100%;
   font-size: 18px;
-  margin: 0 12px;
+  margin: 0 10px;
 }
 
 .generate-message .completions {
@@ -202,6 +202,13 @@
   cursor: pointer;
 }
 
+.modal .close-chat-completions {
+  text-align: center;
+  margin-top: 20px;
+  background-color: lightgray;
+  padding: 8px;
+}
+
 /* 
 
     MOBILE OPS
@@ -218,7 +225,7 @@
   }
 
   .view-conversation .generate-message {
-    margin-top: 24px;
+    margin-top: 16px;
     padding-left: 0;
   }
 }
@@ -247,7 +254,7 @@
   }
 
   .new-message-btns .btn {
-    margin: 0 12px;
+    margin: 0 10px;
     width: 100%;
   }
 }

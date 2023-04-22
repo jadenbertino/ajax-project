@@ -1,9 +1,13 @@
-import RenderMessages from './RenderMessages';
 import AddNewMessageModal from './AddNewMessageModal';
+import RenderMessages from './RenderMessages';
 
-export default function ConversationHistory({ messageHistory, conversationRef, modalActive, setModalActive }) {
-
-  const closeModal = () => setModalActive('') 
+export default function ConversationHistory({
+  messageHistory,
+  conversationRef,
+  modalActive,
+  setModalActive,
+}) {
+  const closeModal = () => setModalActive('');
 
   return (
     <div className='conversation-history'>

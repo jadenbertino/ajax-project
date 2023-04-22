@@ -12,8 +12,8 @@ import ConversationHistory from './ConversationHistory';
 import GenerateMessages from './GenerateMessages';
 
 // styles
+import avatar from '../../assets/avatar.jpg';
 import './Conversation.css';
-import avatar from '../../assets/avatar.jpg'
 
 export default function Conversation() {
   const { user } = useAuthContext();
