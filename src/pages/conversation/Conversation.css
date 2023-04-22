@@ -20,7 +20,6 @@
 .view-conversation main {
   display: flex;
   flex-grow: 1;
-  justify-content: stretch;
 }
 
 .view-conversation .conversation-history {
@@ -64,30 +63,25 @@
 
 /*
 
-    MESSAGE HISTORY
+    CONVERSATION HISTORY
 
 */
 
-.messages-wrapper {
+.messages {
+  height: 1px;
   flex-grow: 1;
-  position: relative;
   overflow: auto;
   border: 1px #fff solid;
   border-radius: 4px;
-}
-
-.messages {
   padding: 12px;
-  min-height: 100%;
 }
 
 .message {
   display: flex;
-  margin-bottom: 16px;
 }
 
-.message:last-child {
-  margin-bottom: 0;
+.message:not(:last-child) {
+  margin-bottom: 16px;
 }
 
 .messages .sent {
@@ -119,7 +113,6 @@
   margin-top: 16px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
 }
 
 .new-message-btns .btn {
@@ -128,6 +121,7 @@
 
 /*
 
+    CONVERSATION HISTORY:
     ADD TO CONVERSATION HISTORY MODAL
 
 */
@@ -170,23 +164,18 @@
   padding-left: 20px;
 }
 
-.generate-message form {
-  display: flex;
-  flex-direction: column;
-}
-
 .view-or-generate-rizz-btns {
   display: flex;
   margin: 0 -12px;
 }
 
-.view-or-generate-rizz-btns > * {
+.view-or-generate-rizz-btns .btn {
   width: 100%;
   font-size: 18px;
   margin: 0 12px;
 }
 
-.completions {
+.generate-message .completions {
   margin-top: 20px;
 }
 
@@ -195,12 +184,8 @@
   margin-bottom: 12px;
 }
 
-.completions ul {
+.generate-message .completions ul {
   padding-left: 20px;
-}
-
-.modal .completions ul {
-  padding-left: 0;
 }
 
 .completions li {
@@ -230,11 +215,11 @@
 
   .view-conversation .conversation-history {
     flex-grow: 1;
-    margin-bottom: 20px;
   }
 
   .view-conversation .generate-message {
-    padding: 0;
+    margin-top: 24px;
+    padding-left: 0;
   }
 }
 
@@ -255,6 +240,7 @@
   .view-conversation .messages p {
     font-size: 14px;
   }
+
   .new-message-btns {
     margin-left: -12px;
     margin-right: -12px;
@@ -262,12 +248,13 @@
 
   .new-message-btns .btn {
     margin: 0 12px;
+    width: 100%;
   }
 }
 
 /* 
 
-    LOADING RING
+    LOADING RING FOR WHEN CHAT COMPLETIONS ARE PENDING
 
 */
 

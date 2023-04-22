@@ -24,6 +24,8 @@ export default function Conversation() {
   const { conversationID } = useParams();
   const [conversationRef, setConversationRef] = useState(null);
   const { document: conversationDoc } = useSubdocument(conversationRef);
+
+  // update converation details upon fetch
   const [conversationName, setConversationName] = useState('');
   const [profilePhotoSrc, setProfilePhotoSrc] = useState(avatar);
   const [messageHistory, setMessageHistory] = useState([]);
