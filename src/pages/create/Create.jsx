@@ -6,11 +6,12 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 
 // styles
 import './Create.css';
+import avatar from '../../assets/avatar.jpg'
 
 export default function Create() {
   const [name, setName] = useState('');
   const [imgSrc, setImgSrc] = useState('');
-  const [previewImgSrc, setPreviewImgSrc] = useState('/avatar.jpg');
+  const [previewImgSrc, setPreviewImgSrc] = useState(avatar);
   const [error, setError] = useState('');
   const { user } = useAuthContext();
   const nav = useNavigate();
@@ -30,7 +31,7 @@ export default function Create() {
       const img = await loadImg(src); // throws error if invalid url
       setPreviewImgSrc(img.src);
     } catch {
-      setPreviewImgSrc('/avatar.jpg');
+      setPreviewImgSrc(avatar);
     }
   }
 

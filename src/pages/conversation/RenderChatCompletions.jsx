@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import checkmarkIcon from './checkmarkIcon.png';
-import clipboardIcon from './clipboardIcon.png';
+import checkmarkIcon from '../../assets/checkmarkIcon.png';
+import clipboardIcon from '../../assets/clipboardIcon.png';
 
 export default function RenderChatCompletions({ chatCompletions }) {
   const [copyIconSrcs, setCopyIconSrcs] = useState([]);

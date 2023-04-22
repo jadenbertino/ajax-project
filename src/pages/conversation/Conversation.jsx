@@ -13,6 +13,7 @@ import GenerateMessages from './GenerateMessages';
 
 // styles
 import './Conversation.css';
+import avatar from '../../assets/avatar.jpg'
 
 export default function Conversation() {
   const { user } = useAuthContext();
@@ -24,7 +25,7 @@ export default function Conversation() {
   const [conversationRef, setConversationRef] = useState(null);
   const { document: conversationDoc } = useSubdocument(conversationRef);
   const [conversationName, setConversationName] = useState('');
-  const [profilePhotoSrc, setProfilePhotoSrc] = useState('/avatar.jpg');
+  const [profilePhotoSrc, setProfilePhotoSrc] = useState(avatar);
   const [messageHistory, setMessageHistory] = useState([]);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function Conversation() {
   useEffect(() => {
     if (!conversationDoc) return;
     const { profilePhotoSrc, name, messages } = conversationDoc;
-    setProfilePhotoSrc(profilePhotoSrc || '/avatar.jpg');
+    setProfilePhotoSrc(profilePhotoSrc || avatar);
     setConversationName(name);
     setMessageHistory(messages);
   }, [conversationDoc]);
