@@ -10,6 +10,7 @@ export default function SignIn() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const { user } = useAuthContext();
   const nav = useNavigate();
   const { signup, error } = useSignUp();
@@ -21,7 +22,7 @@ export default function SignIn() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await signup(username, email, password);
+    await signup(username, email, password, apiKey);
   }
 
   return (
@@ -57,6 +58,15 @@ export default function SignIn() {
               placeholder='6+ characters'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+          <label>
+            <span>OpenAI API Key<a href="https://platform.openai.com/account/api-keys" target="_blank" className='get-api-key'>&#40;Find it here&#41;</a></span>
+            <input
+              required
+              type='password'
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
             />
           </label>
           {error && <div className='error'>{error}</div>}

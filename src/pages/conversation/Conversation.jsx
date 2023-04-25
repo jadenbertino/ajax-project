@@ -6,6 +6,7 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 import { collection, doc } from '@firebase/firestore';
 import { db } from '../../firebase/init';
 import { useSubdocument } from '../../hooks/useSubdocument';
+import { useDocument } from '../../hooks/useDocument';
 
 // components
 import ConversationHistory from './ConversationHistory';
@@ -19,10 +20,12 @@ export default function Conversation() {
   const { user } = useAuthContext();
   const nav = useNavigate();
   const [modalActive, setModalActive] = useState('');
+  const [OPEN_AI_API_KEY, setOPEN_AI_API_KEY] = useState('')
 
   // fetch conversation
   const { conversationID } = useParams();
   const [conversationRef, setConversationRef] = useState(null);
+  const { document: userDoc } = useDocument('users', user && user.uid)
   const { document: conversationDoc } = useSubdocument(conversationRef);
 
   // update converation details upon fetch
@@ -40,7 +43,7 @@ export default function Conversation() {
     const conversationsRef = collection(userDocRef, 'conversations');
     const conversationRef = doc(conversationsRef, conversationID);
     setConversationRef(conversationRef);
-  }, [user, nav, conversationID]);
+  }, [nav, user, conversationID]);
 
   useEffect(() => {
     if (!conversationDoc) return;
@@ -49,6 +52,11 @@ export default function Conversation() {
     setConversationName(name);
     setMessageHistory(messages);
   }, [conversationDoc]);
+
+  useEffect(() => {
+    if (!userDoc) return;
+    setOPEN_AI_API_KEY(userDoc.apiKey)
+  }, [userDoc])
 
   return (
     <div className='view-conversation container'>
@@ -69,6 +77,7 @@ export default function Conversation() {
           setModalActive={setModalActive}
         />
         <GenerateMessages
+          OPEN_AI_API_KEY={OPEN_AI_API_KEY}
           messageHistory={messageHistory}
           modalActive={modalActive}
           setModalActive={setModalActive}

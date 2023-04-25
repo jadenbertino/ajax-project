@@ -5,10 +5,10 @@ import { db } from '../firebase/init';
 export function useDocument(collectionName, id) {
   const [document, setDocument] = useState(null);
   const [error, setError] = useState(null);
-
+  
   // realtime data for doc
   useEffect(() => {
-    if (!id) return;
+    if (!collectionName || !id) return;
     const ref = doc(db, collectionName, id);
     const unsub = onSnapshot(ref, (doc) => {
       if (!doc.data()) throw new Error(`No document with ID ${id} in ${collectionName} collection`)

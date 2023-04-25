@@ -3,13 +3,11 @@ import Modal from '../../components/Modal';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import RenderChatCompletions from './RenderChatCompletions';
 
-const OPEN_AI_API_KEY = process.env.REACT_APP_OPEN_AI_API_KEY;
-
-export default function GenerateMessages({ messageHistory, modalActive, setModalActive }) {
+export default function GenerateMessages({ messageHistory, modalActive, setModalActive, OPEN_AI_API_KEY }) {
   const [loadingChatCompletions, setLoadingChatCompletions] = useState(false);
   const [chatCompletions, setChatCompletions] = useState([]);
   const { width: windowWidth } = useWindowSize();
-
+  
   async function generateFiveNewMessages() {
     if (!messageHistory.length) return;
     setChatCompletions([]);

@@ -17,3 +17,9 @@
 .auth-prompt .redirect {
   color: var(--primary-btn-color);
 }
+
+.auth-prompt .get-api-key {
+  margin-left: 6px;
+  color: var(--blue-color);
+  text-align: left;
+}

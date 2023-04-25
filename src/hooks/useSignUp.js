@@ -10,7 +10,7 @@ export function useSignUp() {
   const [isMounted, setIsMounted] = useState(true)
   const { setAuthContext } = useAuthContext()
 
-  async function signup(displayName, email, password) {
+  async function signup(displayName, email, password, apiKey) {
     setError(null)
     setPending(true)
 
@@ -26,7 +26,7 @@ export function useSignUp() {
       const docRef = doc(db, "users", user.uid)
       const userDoc = {
         email: user.email,
-        apiKey: '',
+        apiKey,
         tokensUsed: 0,
         gender: '',
       }
