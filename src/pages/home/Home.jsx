@@ -13,6 +13,7 @@ import { useSubcollection } from '../../hooks/useSubcollection';
 
 // styles
 import './Home.css';
+import avatar from '../../assets/avatar.jpg'
 
 export default function Home() {
   const { user } = useAuthContext();
@@ -49,7 +50,7 @@ export default function Home() {
                     key={id}
                     to={`/conversations/${id}`}
                   >
-                    <img src={profilePhotoSrc || '/avatar.jpg'} alt='' />
+                    <img src={profilePhotoSrc || avatar} alt='' />
                     <p className='name'>{name}</p>
                   </Link>
                 ))
