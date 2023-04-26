@@ -3,12 +3,12 @@ import { getAuth } from "firebase/auth"
 import { getFirestore } from "firebase/firestore"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDzZh2XqlBhvnLrCpFY8BQ9PCS8g4JWCFk",
-  authDomain: "robo-rizz.firebaseapp.com",
-  projectId: "robo-rizz",
-  storageBucket: "robo-rizz.appspot.com",
-  messagingSenderId: "284406233671",
-  appId: "1:284406233671:web:d77f281f731f715a594f62"
+  apiKey: "AIzaSyDDyFpcj2L_BtFrqNTP-_fFv3NnhKT4STs",
+  authDomain: "dates-on-demand.firebaseapp.com",
+  projectId: "dates-on-demand",
+  storageBucket: "dates-on-demand.appspot.com",
+  messagingSenderId: "839932759957",
+  appId: "1:839932759957:web:3d23cf246ce6cfec3b709c"
 };
 
 const app = initializeApp(firebaseConfig);
