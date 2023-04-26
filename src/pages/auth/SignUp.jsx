@@ -61,7 +61,7 @@ export default function SignIn() {
             />
           </label>
           <label>
-            <span>OpenAI API Key<a href="https://platform.openai.com/account/api-keys" target="_blank" className='get-api-key'>&#40;Find it here&#41;</a></span>
+            <span>OpenAI API Key<a href="https://platform.openai.com/account/api-keys" target="_blank" rel="noreferrer" className='get-api-key'>&#40;Find it here&#41;</a></span>
             <input
               required
               type='password'
